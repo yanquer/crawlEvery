@@ -22,4 +22,15 @@ class GiftInfoItem(scrapy.Item):
 
     # 礼物
     gift_name = scrapy.Field()
+    room = scrapy.Field()
+    time = scrapy.Field()
+
+    def __getattr__(self, name):
+        if name in self.fields:
+            try:
+                return self[name]
+            except KeyError:
+                return None
+        return super().__getattr__(name)
+
 

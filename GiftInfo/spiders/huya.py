@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import logging
 
 from scrapy import Selector
@@ -17,12 +18,14 @@ class HuyaSpider(BasePlayWrightSpider):
     allowed_domains = ["www.huya.com"]
     start_urls = ["https://www.huya.com/"]
 
-    CONCURRENT_REQUESTS = 1
-    _REUSE_PAGE = True
-    HEADLESS = False
     room_ids = [
         '13168',
+        'beisheng1117',
     ]
+
+    CONCURRENT_REQUESTS = len(room_ids)
+    _REUSE_PAGE = True
+    # HEADLESS = False
 
     def start_requests(self):
 
@@ -42,8 +45,7 @@ class HuyaSpider(BasePlayWrightSpider):
 
     async def parse(self, response, **kwargs):
         page = response.meta['playwright_page']
-        # url = response.url
-
+        url = response.url
 
         while 1:
             page_response_lastest = await self.refresh_playwright_response(response, 1000)
@@ -54,6 +56,7 @@ class HuyaSpider(BasePlayWrightSpider):
             msg_divs: SelectorList = chat_room_msgs.css('div[data-cmid]')
 
             _LOGGER.info(f'本次发现 {len(msg_divs)} 消息')
+            date_str = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
             for one in msg_divs:
                 one: Selector
                 msg_front_id = one.attrib['data-cmid']
@@ -84,6 +87,8 @@ class HuyaSpider(BasePlayWrightSpider):
                             num=gift_num,
                             gift_name=span_gift_desc,
                             action="送",
+                            room=url,
+                            time=date_str,
                         )
 
                 elif send_msg := one.css(f'div.msg-normal > span.msg.J_msg'):
@@ -107,6 +112,8 @@ class HuyaSpider(BasePlayWrightSpider):
                             gift_name=span_gift_desc,
                             up_name=up_name,
                             action="下单",
+                            room=url,
+                            time=date_str,
                         )
 
             # 一分钟刷新一次, 如果消息多, 需要更短间隔时间
