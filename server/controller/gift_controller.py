@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-from .. import app
+from ..defines import app
 
 
 @app.get("/gift/{room_id}")

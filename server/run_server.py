@@ -1,7 +1,7 @@
 # coding: utf-8
 
-from . import app
-from . import controller
+from server.defines import app
+from server import controller
 
 def run_server():
     ...
