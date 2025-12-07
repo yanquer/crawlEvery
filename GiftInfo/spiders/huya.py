@@ -7,7 +7,7 @@ from scrapy.selector import SelectorList
 
 from GiftInfo.items import GiftInfoItem
 from common.base_playwright import BasePlayWrightSpider
-
+from common.js_helper import JS_MUTE
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,10 +49,10 @@ class HuyaSpider(BasePlayWrightSpider):
 
         while 1:
             page_response_lastest = await self.refresh_playwright_response(response, 1000)
-            await page.wait_for_timeout(1000)  # 等待 1 秒，确保内容加载
+            await page.wait_for_timeout(5000)  # 等待 1 秒，确保内容加载
 
             chat_room_msgs: SelectorList = page_response_lastest.css('#chat-room__list')
-
+            await page.evaluate(JS_MUTE)
             msg_divs: SelectorList = chat_room_msgs.css('div[data-cmid]')
 
             _LOGGER.info(f'本次发现 {len(msg_divs)} 消息')
@@ -118,6 +118,6 @@ class HuyaSpider(BasePlayWrightSpider):
 
             # 一分钟刷新一次, 如果消息多, 需要更短间隔时间
             # await asyncio.sleep(1*60)
-            await page.wait_for_timeout(1*10 * 1000)
+            await page.wait_for_timeout(1*1 * 1000)
 
 

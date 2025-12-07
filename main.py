@@ -1,6 +1,9 @@
 import logging
 import os.path
 
+logging.basicConfig(level=logging.INFO, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
+logging.getLogger('scrapy-playwright').setLevel(logging.INFO)
+
 from scrapy.utils.project import get_project_settings
 
 from GiftInfo.spiders.huya import HuyaSpider
@@ -73,7 +76,7 @@ if __name__ == '__main__':
     print(f'Running in directory: {os.getcwd()}')
     os.makedirs("log", exist_ok=True)
     # logging.basicConfig(level=logging.DEBUG, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
-    logging.basicConfig(level=logging.INFO, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
+    # logging.basicConfig(level=logging.INFO, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
 
     # run_with_reactor()
 

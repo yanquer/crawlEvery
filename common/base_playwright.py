@@ -6,6 +6,7 @@ from typing import Iterable
 import scrapy
 from scrapy import Request
 from scrapy.http import Response
+from scrapy_playwright.page import PageMethod
 
 from .defines import CUSTOM_LOG
 from .logger_ import LoggerEvery
@@ -24,7 +25,7 @@ class BasePlayWrightSpider(scrapy.Spider, abc.ABC):
     SAVE_DIR = "resources/gift"
     # 并发数
     CONCURRENT_REQUESTS = 25
-    HEADLESS = True
+    HEADLESS = False
     PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 10 * 60 * 1000,  # 10 min
 
     @staticmethod
@@ -47,6 +48,48 @@ class BasePlayWrightSpider(scrapy.Spider, abc.ABC):
                 "headless": headless,
                 # "headless": False,
                 "timeout": 3 * 60 * 1000,  # 3 min
+
+                # Chrome/Chromium 静音参数
+                'args': [
+                    '--mute-audio',
+                ],
+            },
+            PLAYWRIGHT_CONTEXT_KWARGS={
+                'ignore_https_errors': True,
+            },
+            PLAYWRIGHT_PAGE_METHODS={
+                # 静音
+                PageMethod('wait_for_load_state', 'domcontentloaded'),
+                PageMethod('evaluate', '() => { document.volume = 0; }'),
+                # PageMethod('evaluate', """() => {
+                #
+                #     setTimeout(() => {
+                #         document.querySelectorAll('video, audio').forEach(media => {
+                #             # document.querySelectorAll('video, audio')[0].muted = true
+                #             media.muted = true;
+                #             media.volume = 0;
+                #         })
+                #     }, 5 * 1000)
+                #
+                #
+                # }"""),
+
+                # 为什么无效 ?
+                PageMethod('evaluate', """() => {
+
+                            setTimeout(() => {
+                                console.log('静音...')
+                                document.querySelectorAll('video, audio').forEach(videoEle => {
+                                    // 静音
+                                    //  muted 有时候会导致暂停, ?
+                                    videoEle.muted = true
+                                    videoEle.volume = 0
+                                })
+
+                            }, 10 * 1000)
+
+
+                        }"""),
             },
             PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT=playwright_default_navigation_timeout,
 
