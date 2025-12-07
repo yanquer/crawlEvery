@@ -130,32 +130,64 @@ class HuyaSpider(BasePlayWrightSpider):
                                      response: Response,
                                      ):
         """ 解析 带你环游游戏 """
+        _LOGGER.info(f'准备自动化打开带你环游窗口')
         page = response.meta['playwright_page']
 
         # 判断一下是否打开 游戏窗口
         #   倒计时心形窗口
         go_word_wind_heart: ElementHandle = None
         heart_css = '.css-1dbjc4n.r-1awozwy.r-1777fci.r-u8s1d'
+        # 权限请求那个 允许 按钮
+        # per_sure_btn_css = '.modalBtn-09efa8bb.jqOk-68b2316b.modalBtnPrimary-0d919eb5'
+        per_sure_btn_css = '.jqOk-68b2316b'
 
+        heart_btn_css = '.more-attivity-panel #front-ojhmr5vg_web_video_com'
+
+        # await asyncio.sleep(30)
+        # while 1:
+        #     _LOGGER.info(f'触发更多选项')
+        #     await self._move_mouse_to_css_center(response=response, css_selector='.more-activity-icon')
+        #     await asyncio.sleep(3)
+
+        open_win = False
         while 1:
-            if not go_word_wind_heart:
+            if (not go_word_wind_heart) and (not open_win):
                 ...
                 # 尝试将心动环游点出来
                 # await page.hover('.more-activity-icon')
                 # await page.wait_for_timeout(0.1 * 1000)
                 # await page.click('.more-activity-icon')
                 if await self._move_mouse_to_css_center(response=response, css_selector='.more-activity-icon'):
-                    # todo: 点击 “带你环游”
-                    await page.click('.more-attivity-panel #diy-activity-icon-34603')
-            else:
+                    # await asyncio.sleep(60)
+                    _LOGGER.info(f'{url} 点击 带你环游')
+                    await page.click(heart_btn_css)
+                    await page.wait_for_timeout(0.5 * 1000)
+                    # 可能会出现请求权限窗口, 检查一下然后允许
+                    open_win = True
+
+            if open_win:
                 body_iframes: ElementHandle = await page.query_selector('body iframe')
 
                 for iframe_ele in [body_iframes]:
                     if iframe_ele:
                         iframe_page = await iframe_ele.content_frame()
 
-                        for find_ele in await iframe_page.query_selector_all(heart_css):
-                            go_word_wind_heart = find_ele
+                        # 可能会出现请求权限窗口, 检查一下然后允许
+                        # t = await page.query_selector_all(per_sure_btn_css)
+                        for find_ele in await page.query_selector_all(per_sure_btn_css):
+                            # t = await find_ele.text_content()
+                            if await find_ele.text_content() == '允许':
+                                await find_ele.click()
+
+                        t = await iframe_page.query_selector_all('iframe')
+                        if iframe_son_l1 := await iframe_page.query_selector('iframe'):
+                            iframe_son_l1_iframe = await iframe_son_l1.content_frame()
+                            # todo: iframe 获取的内容不对,
+                            t0 = await iframe_son_l1_iframe.content()
+                            for find_ele in await iframe_son_l1_iframe.query_selector_all(heart_css):
+                                t = await find_ele.query_selector(heart_btn_css)
+                                if await find_ele.query_selector(heart_btn_css):
+                                    go_word_wind_heart = find_ele
 
             if (not go_word_wind_heart):
                 _LOGGER.info(f'{url} 未检测到心动环游窗口打开, 请先在任一页面登录, 3s 后将刷新页面重试... ')
@@ -164,6 +196,7 @@ class HuyaSpider(BasePlayWrightSpider):
                 break
 
         #
+        _LOGGER.info(f'成功找到带你环游窗口')
         text_div = await go_word_wind_heart.query_selector('.css-1dbjc4n.r-1awozwy')
         msg_1_div = await text_div.query_selector('.css-1dbjc4n.r-1awozwy')
         text = await text_div.text_content()
@@ -204,7 +237,7 @@ class HuyaSpider(BasePlayWrightSpider):
             await self._wait_for_login_by_text(response=response,)
 
             page_response_lastest = await self.refresh_playwright_response(response, 1000)
-            await page.wait_for_timeout(5000)  # 等待 1 秒，确保内容加载
+            await page.wait_for_timeout(1000)  # 等待 1 秒，确保内容加载
             await page.evaluate(JS_MUTE)
 
             await self._parse_current_go_word(url=url,
