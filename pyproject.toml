@@ -8,5 +8,7 @@ dependencies = [
     "fastapi>=0.124.0",
     "scrapy>=2.13.4",
     "scrapy-playwright>=0.0.44",
+    "uv>=0.9.16",
     "uvicorn>=0.38.0",
+    "watchdog>=6.0.0",
 ]

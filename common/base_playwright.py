@@ -1,4 +1,5 @@
 import abc
+import json
 import logging
 import os
 from typing import Iterable
@@ -19,8 +20,126 @@ LoggerEvery.add_rotating_log_handler(_LOGGER, CUSTOM_LOG, logging.DEBUG)
 ### base
 ####
 
+class BasePlaywrightHelper(object):
+    """ 主要定义一些辅助方法 """
 
-class BasePlayWrightSpider(scrapy.Spider, abc.ABC):
+    async def _move_mouse_to_css_center(self, response: Response, css_selector: str):
+        """ 将鼠标移动要元素正中心
+
+            css_selector:
+                比如 .user-info
+        """
+        page = response.meta['playwright_page']
+
+        # 1. 获取目标元素
+        element = await page.query_selector(css_selector)
+
+        if element:
+            # 2. 获取元素的位置和尺寸
+            bounding_box = await element.bounding_box()
+
+            if bounding_box:
+                # 3. 计算元素正中心坐标
+                center_x = bounding_box['x'] + bounding_box['width'] / 2
+                center_y = bounding_box['y'] + bounding_box['height'] / 2
+
+                # 4. 先将鼠标移动到 (0, 0) 位置
+                await page.mouse.move(0, 0)
+                await page.wait_for_timeout(200)
+
+                # 5. 从 (0, 0) 移动到元素中心
+                await page.mouse.move(center_x, center_y)
+
+                # 6. 等待并验证
+                await page.wait_for_timeout(500)
+
+                # 获取当前鼠标位置
+                # current_pos = await page.mouse.position
+
+                # 触发鼠标事件（可选）
+                # await page.dispatch_event(css_selector, 'mouseover')
+                # await page.dispatch_event(css_selector, 'mousemove')
+
+                # yield {
+                #     'element_found': True,
+                #     'element_position': bounding_box,
+                #     'calculated_center': {'x': center_x, 'y': center_y},
+                #     'mouse_position_after': current_pos,
+                #     'distance_from_center': {
+                #         'x_diff': abs(current_pos['x'] - center_x),
+                #         'y_diff': abs(current_pos['y'] - center_y)
+                #     }
+                # }
+                await page.wait_for_timeout(100)
+                return True
+            else:
+                # yield {'element_found': True, 'error': '无法获取元素位置信息'}
+                return False
+        else:
+            # yield {'element_found': False, 'error': '元素未找到'}
+            ...
+
+        return False
+
+    async def _wait_for_login_by_text(self, response: Response, user_selector: str, user_success_text: str=None):
+        """ 等待页面登录完成
+
+            通过用户元素的text文本判断, 比如用户名
+            没有找到就刷新, 然后循环
+
+            user_selector: 用户元素css选择器
+            user_success_text: 登录成功后具有文本
+                给定值时判断, 值是否是某个值
+                None, 判断用户元素文本值非空
+        """
+
+    cache_dir = os.path.join('data', 'cookies',)
+    cookies_file = os.path.join(cache_dir, 'user_cookies.json')
+    context_file = os.path.join(cache_dir, 'user_context.json')
+    os.makedirs(cache_dir, exist_ok=True)
+    # context_file = 'user_context.dat'
+    async def _save_user_cookies(self, response: Response,):
+        os.makedirs(self.cache_dir, exist_ok=True)
+
+        page = response.meta['playwright_page']
+
+        # 保存 cookies
+        cookies = await page.context.cookies()
+        with open(self.cookies_file, 'w') as f:
+            json.dump(cookies, f, indent=2)
+
+        # 保存 storage state (包含 cookies, localStorage, sessionStorage)
+        storage_state = await page.context.storage_state(path=self.context_file)
+
+        _LOGGER.info(f"登录状态已保存到 {self.context_file}")
+        return True
+
+    async def _load_user_cookies(self, response: Response):
+        os.makedirs(self.cache_dir, exist_ok=True)
+        page = response.meta['playwright_page']
+
+        # if os.path.exists(self.context_file):
+        #     # 使用保存的状态
+        #     yield scrapy.Request(
+        #         url='https://example.com/dashboard',
+        #         meta={
+        #             'playwright': True,
+        #             'playwright_include_page': True,
+        #             'playwright_context_kwargs': {
+        #                 'storage_state': self.context_file,  # 加载保存的状态
+        #             },
+        #         },
+        #         callback=self.parse_logged_in
+        #     )
+
+
+
+
+
+
+
+
+class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
 
     SAVE_DIR = "resources/gift"
     # 并发数
@@ -204,6 +323,10 @@ class BasePlayWrightSpider(scrapy.Spider, abc.ABC):
                     # 增加导航超时时间
                     "timeout": 60 * 60 * 1000,  # 30 min
                 },
+                'playwright_context_kwargs': {
+                    # 加载保存的状态
+                    'storage_state': self.context_file if os.path.exists(self.context_file) else None,
+                },
             },
             cb_kwargs=callback_kwargs,
             errback=self.error_handler_from_start_requests if from_where==1 else self.error_handler_from_parse,
@@ -227,4 +350,6 @@ class BasePlayWrightSpider(scrapy.Spider, abc.ABC):
         html = await page.content()
         response = scrapy.http.HtmlResponse(url=page.url, body=html.encode(), encoding='utf-8')
         return response
+
+
 
