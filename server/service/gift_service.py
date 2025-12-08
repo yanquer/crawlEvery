@@ -8,7 +8,7 @@ from asyncio.subprocess import Process
 from typing import Dict
 
 from common.file_obs_async import global_file_monitor
-from ..base import Result
+from ..base import Result, WsResult
 from ..defines import PROJECT_ROOT
 from ..ws_.manager import global_ws_manager
 
@@ -43,17 +43,28 @@ class GiftService(object):
 
         self._output_handler = CrawlOutputHandler()
 
-        asyncio.create_task(self._alive())
         # self._start_check_new_msg()
+
+    _already_create = False
+    def create_task(self):
+        if self._already_create:
+            return
+        self._already_create = True
+        asyncio.create_task(self._alive())
 
     async def _alive(self):
         """ 存活确认 """
         while True:
-
-            ret = Result(
+            _LOGGER.info(f'alive')
+            ret = WsResult(
                 data=["还活着"],
+                type="log",
+                event="log",
+                timestamp=WsResult.get_timestamp(),
+
             )
-            global_ws_manager.broadcast_json(ret.get_dict())
+            await global_ws_manager.broadcast_json(ret.get_dict())
+            await asyncio.sleep(1)
 
     async def check_rooms(self, room_ids: str):
 

@@ -5,6 +5,8 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import json
 from datetime import datetime
 
+from starlette.middleware.cors import CORSMiddleware
+
 from .manager import global_ws_manager
 from ..defines import app
 
@@ -12,16 +14,26 @@ from ..defines import app
 _LOGGER = logging.getLogger(__name__)
 
 
+app.add_middleware(
+    CORSMiddleware,
+    # allow_origins=["http://localhost:5173"],
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # WebSocket 端点
 @app.websocket("/ws/room")
 async def websocket_chat(websocket: WebSocket, user_id: str = None):
-    # 连接
+    # 连接 默认就是订阅模式, 后面有空再分出来
     user_id = await global_ws_manager.connect(websocket, user_id)
 
     try:
         # 发送欢迎消息
         welcome_msg = json.dumps({
             "type": "welcome",
+            "event": "welcome",
             "message": f"用户 {user_id} 进入!",
             "user_id": user_id,
             "timestamp": datetime.now().isoformat()
@@ -40,37 +52,6 @@ async def websocket_chat(websocket: WebSocket, user_id: str = None):
                 target_user = message_data.get("target_user")
 
                 _LOGGER.info(f'message_type:{message_type}, content:{content}, target_user:{target_user}')
-                # # 处理不同类型的消息
-                # if message_type == "chat":
-                #     # 聊天消息
-                #     text_message = {
-                #         "type": "chat",
-                #         "from_user": user_id,
-                #         "content": content,
-                #         "timestamp": datetime.now().isoformat()
-                #     }
-                #
-                #     if target_user:
-                #         # 私聊消息
-                #         text_message["to_user"] = target_user
-                #         await manager.send_to_user(target_user, json.dumps(text_message))
-                #         # 也发送给自己
-                #         await manager.send_personal_message(json.dumps(text_message), websocket)
-                #     else:
-                #         # 群聊消息
-                #         await manager.broadcast_json(text_message)
-                #     _LOGGER.info(text_message)
-                #
-                # elif message_type == "typing":
-                #     # 输入状态
-                #     typing_msg = {
-                #         "type": "typing",
-                #         "user_id": user_id,
-                #         "is_typing": message_data.get("is_typing", False)
-                #     }
-                #     await manager.broadcast_json(typing_msg)
-                #     _LOGGER.info(typing_msg)
-
             except json.JSONDecodeError:
                 # 处理纯文本消息
                 text_message = {

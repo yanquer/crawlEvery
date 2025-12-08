@@ -72,7 +72,7 @@ class AsyncFileMonitor(object):
         return {"status": "started", "path": path}
 
     # 注意单例
-    _file_last_visit_map: Dict[str, ] = {}
+    _file_last_visit_map: Dict[str, int] = {}
     async def _check_file_context(self, file_path: str):
         """ 暂时通过行号来识别 """
         try:
