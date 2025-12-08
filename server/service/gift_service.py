@@ -43,8 +43,17 @@ class GiftService(object):
 
         self._output_handler = CrawlOutputHandler()
 
-        # asyncio.create_task(self._check_new_msg())
+        asyncio.create_task(self._alive())
         # self._start_check_new_msg()
+
+    async def _alive(self):
+        """ 存活确认 """
+        while True:
+
+            ret = Result(
+                data=["还活着"],
+            )
+            global_ws_manager.broadcast_json(ret.get_dict())
 
     async def check_rooms(self, room_ids: str):
 
