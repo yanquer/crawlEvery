@@ -8,9 +8,9 @@ from asyncio.subprocess import Process
 from typing import Dict
 
 from common.file_obs_async import global_file_monitor
-from ..base import Result, WsResult
+from .message_center import MESSAGE_CENTER
+from ..base import Result, WsResult, RoomTotalWsResult, LogWsResult
 from ..defines import PROJECT_ROOT
-from ..ws_.manager import global_ws_manager
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,8 +27,12 @@ class CrawlOutputHandler(object):
             line = line.decode().rstrip()
             _LOGGER.debug(f"[{stream_name}] {line}")
 
-            ret = Result()
-            global_ws_manager.broadcast_json(ret.get_dict())
+            ret = LogWsResult(
+                timestamp=WsResult.get_timestamp(),
+                data=line,
+            )
+
+            MESSAGE_CENTER.handle_message(ret)
 
 
 class GiftService(object):
@@ -50,21 +54,7 @@ class GiftService(object):
         if self._already_create:
             return
         self._already_create = True
-        asyncio.create_task(self._alive())
-
-    async def _alive(self):
-        """ 存活确认 """
-        while True:
-            _LOGGER.info(f'alive')
-            ret = WsResult(
-                data=["还活着"],
-                type="log",
-                event="log",
-                timestamp=WsResult.get_timestamp(),
-
-            )
-            await global_ws_manager.broadcast_json(ret.get_dict())
-            await asyncio.sleep(1)
+        asyncio.create_task(MESSAGE_CENTER.send_alive_message())
 
     async def check_rooms(self, room_ids: str):
 
@@ -76,6 +66,7 @@ class GiftService(object):
             tmp_ids.add(room_id)
 
         self.check_room_ids.update(tmp_ids)
+        await MESSAGE_CENTER.notify_room(self.check_room_ids)
 
         asyncio.create_task(self._start_check(room_ids))
         return True, None

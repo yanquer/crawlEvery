@@ -3,6 +3,8 @@
 // import {WebSocket, Client} from "rpc-websockets"
 
 
+import type {WsResponse} from "./base.ts";
+
 export class WsClient{
 
     static shared: WsClient | undefined;
@@ -40,7 +42,7 @@ export class WsClient{
     ){
         console.log(`handleEvent Received ${event.type} data ${event.data}`);
 
-        let repJson: any = {}
+        let repJson: WsResponse = {} as WsResponse;
         try {
             repJson = JSON.parse(event.data);
         } catch (e) {
@@ -57,8 +59,8 @@ export class WsClient{
         }
     }
 
-    protected subscribeMap = new Map<string, Array<(data: any) => Promise<any>>>();
-    async subscribe(method: string, callable: (data: any) => Promise<any>):Promise<() => Promise<void>>{
+    protected subscribeMap = new Map<string, Array<(data: WsResponse) => Promise<any>>>();
+    async subscribe(method: string, callable: (data: WsResponse) => Promise<any>):Promise<() => Promise<void>>{
         await this.wsReady
         console.log(`subscribe ${method}: ${callable}`)
         this.ws?.send(method)
