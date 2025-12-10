@@ -10,11 +10,12 @@ import asyncio
 import sys
 
 if sys.platform == 'win32':
+    ...
     # Windows上设置事件循环策略
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
-    import nest_asyncio
-    nest_asyncio.apply()
+    # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    #
+    # import nest_asyncio
+    # nest_asyncio.apply()
 
 
 BOT_NAME = "GiftInfo"

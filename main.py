@@ -88,7 +88,11 @@ if __name__ == '__main__':
     if sys.platform == 'win32':
         ...
         # Windows上设置事件循环策略
-        # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+        import nest_asyncio
+
+        nest_asyncio.apply()
 
     from scrapy.utils.reactor import install_reactor
     install_reactor('twisted.internet.asyncioreactor.AsyncioSelectorReactor')
