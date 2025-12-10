@@ -1,0 +1,10 @@
+
+
+services:
+
+  web-craw:
+    image: python:3.12.12-slim-bookworm
+
+    volumes:
+      - ./:/app
+

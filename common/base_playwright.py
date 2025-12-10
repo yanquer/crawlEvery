@@ -144,7 +144,7 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
     SAVE_DIR = "resources/gift"
     # 并发数
     CONCURRENT_REQUESTS = 25
-    HEADLESS = False
+    HEADLESS = True
     PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 10 * 60 * 1000,  # 10 min
 
     @staticmethod
@@ -169,9 +169,9 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
                 "timeout": 3 * 60 * 1000,  # 3 min
 
                 # Chrome/Chromium 静音参数
-                'args': [
-                    '--mute-audio',
-                ],
+                # 'args': [
+                #     '--mute-audio',
+                # ],
             },
             PLAYWRIGHT_CONTEXT_KWARGS={
                 'ignore_https_errors': True,
