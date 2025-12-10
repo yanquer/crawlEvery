@@ -6,6 +6,13 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import asyncio
+import sys
+
+if sys.platform == 'win32':
+    # Windows上设置事件循环策略
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 
 BOT_NAME = "GiftInfo"
 
