@@ -94,6 +94,17 @@ if __name__ == '__main__':
     #
     #     nest_asyncio.apply()
 
+    # 只在Windows上且首次运行时设置
+    if sys.platform == 'win32':
+        try:
+            # 尝试获取当前事件循环，如果不存在则创建
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            # 没有事件循环，创建新的
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
     from scrapy.utils.reactor import install_reactor
     install_reactor('twisted.internet.asyncioreactor.AsyncioSelectorReactor')
 

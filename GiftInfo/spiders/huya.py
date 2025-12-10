@@ -1,7 +1,6 @@
 import asyncio
 import datetime
 import logging
-import sys
 
 from playwright.async_api import ElementHandle, Page
 from scrapy import Selector
@@ -33,10 +32,6 @@ class HuyaSpider(BasePlayWrightSpider):
     # HEADLESS = False
 
     def start_requests(self):
-
-        # Windows上设置正确的事件循环策略
-        if sys.platform == 'win32':
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
         _LOGGER.info(f'需要检查的房间 {self.room_ids}')
 
