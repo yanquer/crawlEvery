@@ -44,7 +44,7 @@
     "value": "0.50",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796651380,
+    "expires": 1796914408,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -54,7 +54,7 @@
     "value": "0.80",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796651491,
+    "expires": 1796914408,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -64,7 +64,7 @@
     "value": "true",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796651491,
+    "expires": 1796914408,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -74,7 +74,7 @@
     "value": "0a899597606e35693801a530a63023ba",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1767707491,
+    "expires": 1767970408,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -111,7 +111,7 @@
   },
   {
     "name": "rep_cnt",
-    "value": "82",
+    "value": "83",
     "domain": ".huya.com",
     "path": "/",
     "expires": -1,
@@ -134,7 +134,7 @@
     "value": "d367ea4e994de7dafad9e74f09000008819c07",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796651491,
+    "expires": 1796914408,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -154,14 +154,14 @@
     "value": "1765109347",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796651492,
+    "expires": 1796914410,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "Hm_lpvt_51700b6c722f5bb4cf39906a596ea41f",
-    "value": "1765115492",
+    "value": "1765378410",
     "domain": ".huya.com",
     "path": "/",
     "expires": -1,
@@ -181,7 +181,7 @@
   },
   {
     "name": "huya_web_rep_cnt",
-    "value": "1300",
+    "value": "1334",
     "domain": ".huya.com",
     "path": "/",
     "expires": -1,
@@ -191,10 +191,10 @@
   },
   {
     "name": "sdid",
-    "value": "0UnHUgv0_qmfD4KAKlwzhqY9yb_58ZLrQToFYkcT2FQhWEuf6b5IPZAtNSyTN5M4cwUidvztF8eepaMwooQkKJ1CCMKvAJrkV4AzH10JABfDWVkn9LtfFJw_Qo4kgKr8OZHDqNnuwg612sGyflFn1dpHkirAgY17hv7kyJS3vb_vzDQGUw17xVjPPHGi2f7oo",
+    "value": "0UnHUgv0_qmfD4KAKlwzhqYh4OwYO3F03RwBCqS0pSBgsGeWG1x1v2xTc58YL1Vi1ZOjlGLU4iWqo4WgQh3Xi-ivDJuyIEm_jtbAdcT09KojWVkn9LtfFJw_Qo4kgKr8OZHDqNnuwg612sGyflFn1dpHkirAgY17hv7kyJS3vb_vzDQGUw17xVjPPHGi2f7oo",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765720024,
+    "expires": 1765983211,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -211,7 +211,7 @@
   },
   {
     "name": "huya_flash_rep_cnt",
-    "value": "409",
+    "value": "418",
     "domain": ".huya.com",
     "path": "/",
     "expires": -1,
@@ -244,14 +244,14 @@
     "value": "91694e161cf863a9001842d1c93ef53714866315",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765720024,
+    "expires": 1765983211,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "huya_hd_rep_cnt",
-    "value": "225",
+    "value": "230",
     "domain": ".huya.com",
     "path": "/",
     "expires": -1,
@@ -381,10 +381,10 @@
   },
   {
     "name": "h_unt",
-    "value": "1765109378",
+    "value": "1765378408",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714178,
+    "expires": 1765983208,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -404,7 +404,7 @@
     "value": "0a899597606e35693801a530a63023ba",
     "domain": "zt.huya.com",
     "path": "/",
-    "expires": 1796651493,
+    "expires": 1796914417,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -415,6 +415,16 @@
     "domain": "zt.huya.com",
     "path": "/2a87c7bb/mobile",
     "expires": 1796651493,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "huya_ua",
+    "value": "webh5&0.0.1&websocket&&diyh5_46575",
+    "domain": "zt.huya.com",
+    "path": "/3a9960b1/mobile",
+    "expires": 1796914416,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -444,7 +454,7 @@
     "value": "webh5&0.1.0&websocket&&h5_/13168",
     "domain": "www.huya.com",
     "path": "/",
-    "expires": 1796651492,
+    "expires": 1796914408,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -454,7 +464,7 @@
     "value": "0a899597606e35693801a530a63023ba",
     "domain": "www.huya.com",
     "path": "/",
-    "expires": 1796651492,
+    "expires": 1796914416,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"

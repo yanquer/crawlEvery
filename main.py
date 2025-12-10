@@ -1,5 +1,7 @@
+import asyncio
 import logging
 import os.path
+import sys
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -82,6 +84,10 @@ if __name__ == '__main__':
     # logging.basicConfig(level=logging.INFO, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
 
     # run_with_reactor()
+
+    if sys.platform == 'win32':
+        # Windows上设置事件循环策略
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     from scrapy.utils.reactor import install_reactor
     install_reactor('twisted.internet.asyncioreactor.AsyncioSelectorReactor')
