@@ -1,6 +1,9 @@
 import logging
 import os.path
 
+from dotenv import load_dotenv
+load_dotenv()
+
 logging.basicConfig(level=logging.INFO, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
 logging.getLogger('scrapy-playwright').setLevel(logging.INFO)
 
