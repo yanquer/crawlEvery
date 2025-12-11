@@ -24,7 +24,9 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN python -m venv .venv
-RUN . .venv/bin/activate && pip install uv
+RUN . .venv/bin/activate && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/ && \
+    pip install uv
 RUN #. .venv/bin/activate && uv sync
 RUN . .venv/bin/activate && UV_PYTHON_INSTALL_MIRROR=https://mirror.nju.edu.cn/github-release/indygreg/python-build-standalone/ uv sync
 RUN . .venv/bin/activate && playwright install
