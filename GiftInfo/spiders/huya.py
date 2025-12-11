@@ -234,15 +234,17 @@ class HuyaSpider(BasePlayWrightSpider):
 
         while 1:
 
-            await self._wait_for_login_by_text(response=response,)
+            # todo: 放到 docker 里了 暂时取消主动登录
+            # await self._wait_for_login_by_text(response=response,)
 
             page_response_lastest = await self.refresh_playwright_response(response, 1000)
             await page.wait_for_timeout(1000)  # 等待 1 秒，确保内容加载
             await page.evaluate(JS_MUTE)
 
-            await self._parse_current_go_word(url=url,
-                                              page_response_lastest=page_response_lastest,
-                                              response=response)
+            # todo: 放到 docker 里了 暂时取消打开环游界面
+            # await self._parse_current_go_word(url=url,
+            #                                   page_response_lastest=page_response_lastest,
+            #                                   response=response)
 
             for msg_ret in self._parse_msg(url=url, page_response_lastest=page_response_lastest):
                 yield msg_ret
