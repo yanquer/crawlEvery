@@ -22,3 +22,13 @@ services:
       - "8091:8091"
     volumes:
       - "./log:/usr/src/app/log"
+
+#  nginx-web:
+#    restart: unless-stopped
+#    image: "nginx:latest"
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - ./resou
+#    depends_on:
+#      - web-craw
