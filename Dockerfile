@@ -25,7 +25,8 @@ COPY . .
 
 RUN python -m venv .venv
 RUN . .venv/bin/activate && pip install uv
-RUN . .venv/bin/activate && uv sync
+RUN #. .venv/bin/activate && uv sync
+RUN . .venv/bin/activate && UV_PYTHON_INSTALL_MIRROR=https://mirror.nju.edu.cn/github-release/indygreg/python-build-standalone/ uv sync
 RUN . .venv/bin/activate && playwright install
 
 CMD [".venv/bin/python", "main_server.py"]
