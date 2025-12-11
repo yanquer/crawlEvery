@@ -16,6 +16,6 @@ dependencies = [
     "websockets>=15.0.1",
 ]
 
-[tool.uv]
-python-install-mirror = "https://mirror.nju.edu.cn/github-release/indygreg/python-build-standalone"
+#[tool.uv]
+#python-install-mirror = "https://mirror.nju.edu.cn/github-release/indygreg/python-build-standalone"
 
