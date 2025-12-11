@@ -1,26 +1,30 @@
 // @ts-ignore
-import {Box, Flex, ScrollArea, Theme, ThemePanel, Text, Heading, Button} from "@radix-ui/themes";
+import {Box, Flex, ScrollArea, Theme, ThemePanel, Text, Heading, Button, Badge, Grid} from "@radix-ui/themes";
 import {type ReactNode, useEffect, useState} from "react";
 import {WsClient} from "../common/ws_/simple-ws-client";
 
 
-export const LeftArea = ({areaTitle="运行日志"}) => {
+export const LeftArea = ({
+                             areaTitle="运行日志",
+                             subEvent="log",
+                         }) => {
 
     const [text, setText] = useState<Array<ReactNode>>([]);
 
     useEffect(() => {
 
-        WsClient.shared?.subscribe('log', async (data) => {
+        WsClient.shared?.subscribe(subEvent, async (data) => {
             // console.log(data);
             if (data){
                 setText((lastData) => {
                     lastData.push(
-                        <Text as="p">
-                            [{data.timestamp}]{data.data}
+                        <Text as="p" key={lastData.length+1}>
+                            {/*[{data.timestamp}]*/}
+                            {data.data}
                         </Text>
                     )
-                    console.log('lastData')
-                    console.log(lastData)
+                    // console.log('lastData')
+                    // console.log(lastData)
                     return [...lastData];
                 });
             }
@@ -57,7 +61,7 @@ export const LeftArea = ({areaTitle="运行日志"}) => {
 }
 export const RightArea = () => {
 
-    return <LeftArea areaTitle={'阶段汇总'} />;
+    return <LeftArea areaTitle={'礼物消息'} subEvent={'gift'} />;
 }
 
 export const ListenRooms = ({areaTitle="已在监听的直播间"}) => {
@@ -67,25 +71,32 @@ export const ListenRooms = ({areaTitle="已在监听的直播间"}) => {
     useEffect(() => {
 
         WsClient.shared?.subscribe('room', async (data) => {
-            // console.log(data);
+            console.log(`ListenRooms room ${data?.data}`);
             if (data){
-                setText((lastData) => {
-                    lastData.push(
-                        <Text as="p">
-                            {data.data}
-                        </Text>
+                const rooms: Array<string> = data.data
+                setText(
+                    rooms.map((r, idx) =>
+                        <Badge
+                            size={'1'}
+                            key={idx} color="blue">{r}</Badge>
+                        // <Text>{r}</Text>
                     )
-                    console.log('lastData')
-                    console.log(lastData)
-                    return [...lastData];
-                });
+                );
             }
-        }).then()
+        }).then(async () => {
+            await WsClient?.shared?.send({
+                event: "room",
+            });
+        })
 
     }, [])
 
     return <Box width={'100%'} height={'100%'} p={'4'}
-        // className={'bg-gray-800'}
+        // className={'bg-gray-700'}
+        className={
+            'shadow-2xs bg-gray-500 rounded-lg'
+        }
+                m={'5'}
     >
         <Flex width={'100%'} height={'100%'}
               justify={'center'}
@@ -103,9 +114,14 @@ export const ListenRooms = ({areaTitle="已在监听的直播间"}) => {
                     {/*<Heading size="4" mb="2" trim="start">*/}
                     {/*    Principles of the typographic craft*/}
                     {/*</Heading>*/}
-                    <Flex direction="column" gap="4">
+                    {/*<Flex direction="column" gap="4">*/}
+                    {/*    {...text}*/}
+                    {/*</Flex>*/}
+
+                    <Flex gap="4">
                         {...text}
                     </Flex>
+
                 </Box>
             </ScrollArea>
         </Flex>

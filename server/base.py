@@ -14,6 +14,21 @@ class SimpleModel(object):
     def get_json_str(self):
         return json.dumps(self.get_dict())
 
+    @classmethod
+    def from_json(cls, data: Union[str, dict]):
+        if data:
+            if isinstance(data, str):
+                try:
+                    data = json.loads(data)
+                except json.decoder.JSONDecodeError:
+                    data = {}
+
+            data: dict = data
+
+            return cls(**{k: v for k,v in data.items() if k in cls.__dataclass_fields__})
+
+        return None
+
 
 @dataclass
 class Result(SimpleModel):
@@ -56,10 +71,25 @@ class LogWsResult(WsResult):
 
 
 @dataclass
+class GiftWsResult(WsResult):
+    type: str = "gift"
+    event: str = "gift"
+
+
+@dataclass
 class RoomTotalWsResult(WsResult):
     """ 直播间阶段汇总 """
     type: str = "room_total"
     event: str = "room_total"
+
+
+@dataclass
+class WsReceive(SimpleModel):
+
+    event: str = ""
+    data: any = None
+
+
 
 
 

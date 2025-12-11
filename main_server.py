@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-logging.basicConfig(level=logging.INFO, filename="log/app.log", format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.DEBUG, filename="log/app.log", format="%(asctime)s - %(levelname)s - %(message)s")
 
 import uvicorn
 

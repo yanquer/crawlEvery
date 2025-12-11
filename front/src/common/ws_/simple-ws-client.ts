@@ -3,7 +3,7 @@
 // import {WebSocket, Client} from "rpc-websockets"
 
 
-import type {WsResponse} from "./base.ts";
+import type {WsRequest, WsResponse} from "./base.ts";
 
 export class WsClient{
 
@@ -62,7 +62,7 @@ export class WsClient{
     protected subscribeMap = new Map<string, Array<(data: WsResponse) => Promise<any>>>();
     async subscribe(method: string, callable: (data: WsResponse) => Promise<any>):Promise<() => Promise<void>>{
         await this.wsReady
-        console.log(`subscribe ${method}: ${callable}`)
+        console.log(`subscribe ${method}`)
         this.ws?.send(method)
 
         if (!this.subscribeMap.has(method)) {
@@ -70,6 +70,13 @@ export class WsClient{
         }
         this.subscribeMap.get(method)?.push(callable)
         return async () => await this.unsubscribe(method)
+    }
+
+    async send(methodData: WsRequest,): Promise<void> {
+        await this.wsReady
+        const datsStr = JSON.stringify(methodData)
+        console.log(`send ${datsStr}`)
+        this.ws?.send(datsStr)
     }
 
     async unsubscribe(method: string, ):Promise<void>{

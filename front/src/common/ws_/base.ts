@@ -8,3 +8,10 @@ export interface WsResponse {
 
     message: string
 }
+
+
+export interface WsRequest {
+    event: string
+    data?: any
+
+}

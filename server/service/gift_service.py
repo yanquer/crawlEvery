@@ -5,20 +5,21 @@ import logging
 import os
 from asyncio import StreamReader
 from asyncio.subprocess import Process
-from typing import Dict
+from typing import Dict, List, Set
 
 from common.file_obs_async import global_file_monitor
 from .message_center import MESSAGE_CENTER
-from ..base import Result, WsResult, RoomTotalWsResult, LogWsResult
+from ..base import Result, WsResult, RoomTotalWsResult, LogWsResult, GiftWsResult
 from ..defines import PROJECT_ROOT
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class CrawlOutputHandler(object):
+    check_room_ids: Set[str]
+
     # 实时读取标准输出
-    @classmethod
-    async def read_stream(cls, stream: StreamReader, stream_name: str):
+    async def read_stream(self, stream: StreamReader, stream_name: str):
         """读取并解析流数据"""
         while True:
             line = await stream.readline()
@@ -27,13 +28,22 @@ class CrawlOutputHandler(object):
             line = line.decode().rstrip()
             _LOGGER.debug(f"[{stream_name}] {line}")
 
-            ret = LogWsResult(
-                timestamp=WsResult.get_timestamp(),
-                data=line,
-            )
+            if ("下单了" in line) or (
+                "送" in line and "个" in line
+            ):
+                ret = GiftWsResult(
+                    timestamp=WsResult.get_timestamp(),
+                    data=line,
+                )
+            else:
+                ret = LogWsResult(
+                    timestamp=WsResult.get_timestamp(),
+                    data=line,
+                )
 
             # print(line)
             await MESSAGE_CENTER.handle_message(ret)
+            # await MESSAGE_CENTER.notify_room(self.check_room_ids)
 
 
 class GiftService(object):
@@ -67,7 +77,7 @@ class GiftService(object):
             tmp_ids.add(room_id)
 
         self.check_room_ids.update(tmp_ids)
-        await MESSAGE_CENTER.notify_room(self.check_room_ids)
+        await self.notify_room()
 
         asyncio.create_task(self._start_check(room_ids))
         return True, None
@@ -140,6 +150,10 @@ class GiftService(object):
         #         ret = Result()
         #         global_ws_manager.broadcast_json(ret.get_dict())
 
+    async def notify_room(self, ):
+        await MESSAGE_CENTER.notify_room(self.check_room_ids)
 
+
+GIFT_SERVICE = GiftService()
 
 

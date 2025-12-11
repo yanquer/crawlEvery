@@ -2,9 +2,23 @@
 
 services:
 
+#  web-craw:
+#    image: python:3.12.12-slim-bookworm
+#
+#    volumes:
+#      - ./:/app
   web-craw:
-    image: python:3.12.12-slim-bookworm
-
+    restart: unless-stopped
+    # docker build -t myapp -f resources/docker/Dockerfile .
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    #      args:
+    #        BUILDKIT_PROGRESS: plain  # 进度输出格式
+    #    network_mode: "host"
+    stdin_open: true
+    tty: true
+    ports:
+      - "80:8091"
     volumes:
-      - ./:/app
-
+      - "./log:/usr/src/app/log"

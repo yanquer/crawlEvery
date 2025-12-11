@@ -27,7 +27,7 @@ class MessageCenter(object):
         """ 提醒当前正在监听的直播间 """
         try:
             ret = RoomWsResult(
-                data=room_ids,
+                data=list(room_ids),
                 timestamp=WsResult.get_timestamp(),
             )
             await global_ws_manager.broadcast_json(ret.get_dict())
