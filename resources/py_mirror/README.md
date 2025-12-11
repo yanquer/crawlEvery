@@ -5,7 +5,7 @@
 ```bash
 
 
-UV_PYTHON_INSTALL_MIRROR=file://./resources/py_mirror uv sync
+UV_PYTHON_INSTALL_MIRROR=file:///usr/src/app/resources/py_mirror uv sync
 
 
 ```
