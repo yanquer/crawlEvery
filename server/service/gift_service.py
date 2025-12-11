@@ -89,7 +89,8 @@ class GiftService(object):
         })
 
         process = await asyncio.create_subprocess_exec(
-            'python3',
+            # 'python3',
+            '/usr/src/app/.venv/bin/python',
             'main.py',
             env=_env,
             cwd=PROJECT_ROOT,

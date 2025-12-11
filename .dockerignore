@@ -40,7 +40,8 @@ dist-ssr
 docker-compose.yml
 doc
 .dockerignore
-
+front
+.gitignore
 
 
 
