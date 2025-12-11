@@ -18,5 +18,5 @@ dependencies = [
 
 #[tool.uv]
 ##python-install-mirror = "https://mirror.nju.edu.cn/github-release/indygreg/python-build-standalone"
-#python-install-mirror = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+python-install-mirror = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
 
