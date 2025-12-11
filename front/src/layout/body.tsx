@@ -145,7 +145,7 @@ export const Body = () => {
         for (let i = 0; i < 3; i++) {
             try {
                 // WsClient.shared = new WsClient('http://localhost:8091/ws/room');
-                WsClient.shared = new WsClient('ws://localhost:8091/ws/room');
+                WsClient.shared = new WsClient('ws://8.156.64.230:8091/ws/room');
                 break;
             } catch (e) {
                 console.error(e);
