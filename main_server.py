@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 logging.basicConfig(level=logging.INFO, filename="log/app.log", format="%(asctime)s - %(levelname)s - %(message)s")
@@ -8,4 +9,7 @@ from server import run_server
 from server.defines import app
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8091)
+    uvicorn.run(
+        app, host="0.0.0.0", port=8091,
+        loop="asyncio",
+    )

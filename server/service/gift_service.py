@@ -32,7 +32,8 @@ class CrawlOutputHandler(object):
                 data=line,
             )
 
-            MESSAGE_CENTER.handle_message(ret)
+            # print(line)
+            await MESSAGE_CENTER.handle_message(ret)
 
 
 class GiftService(object):
@@ -84,6 +85,7 @@ class GiftService(object):
             cwd=PROJECT_ROOT,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
+            # start_new_session=True,
         )
         self.run_tasks[room_ids] = process
 
