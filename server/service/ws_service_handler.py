@@ -1,5 +1,6 @@
 # coding: utf-8
 import logging
+import os
 
 from common.utils import read_xlsx
 from server.base import WsReceive
@@ -19,7 +20,13 @@ class WsServiceHandler(object):
 
         room_dat = read_xlsx('resources/meta/统计.xlsx')
         room_ids = list(room_dat.keys())
-        room_ids_str = ','.join([str(x) for x in room_ids])
+
+        max_room = 5
+        if env_max_room := os.environ.get('S_HY_MAX_TASKS'):
+            if env_max_room.isdigit():
+                max_room = int(env_max_room)
+
+        room_ids_str = ','.join([str(x) for x in room_ids][:max_room])
         await GIFT_SERVICE.check_rooms(room_ids_str)
 
     async def handle_message(self, ws_data: WsReceive):

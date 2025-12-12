@@ -23,6 +23,8 @@ services:
     volumes:
       - "./log:/usr/src/app/log"
       - "./resources/details:/usr/src/app/resources/details"
+    environment:
+      S_HY_MAX_TASKS: 5
 
 #  nginx-web:
 #    restart: unless-stopped
