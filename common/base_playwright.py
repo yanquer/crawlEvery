@@ -144,7 +144,7 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
     SAVE_DIR = "resources/gift"
     # 并发数
     CONCURRENT_REQUESTS = 25
-    HEADLESS = True
+    HEADLESS = False
     PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 10 * 60 * 1000,  # 10 min
 
     @staticmethod
@@ -221,6 +221,7 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
             # page对象复用, 多page必须多线程
             CONCURRENT_REQUESTS=concurrent_requests,  # 增加并发数
 
+            # PLAYWRIGHT_BROWSER_TYPE="chromium",  # 指定使用 chromium
             # PLAYWRIGHT_BROWSER_TYPE="firefox",  # 指定使用 Firefox
             PLAYWRIGHT_BROWSER_TYPE="webkit",  # 指定使用 webkit
         )

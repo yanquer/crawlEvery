@@ -31,6 +31,8 @@ async def websocket_chat(websocket: WebSocket, user_id: str = None):
     user_id = await global_ws_manager.connect(websocket, user_id)
 
     try:
+        from ..service.ws_service_handler import WS_SERVICE_HANDLER
+        await WS_SERVICE_HANDLER.init_rooms()
         # 发送欢迎消息
         welcome_msg = json.dumps({
             "type": "welcome",
@@ -48,7 +50,6 @@ async def websocket_chat(websocket: WebSocket, user_id: str = None):
             # 解析消息
             try:
                 message_data = json.loads(data)
-                from ..service.ws_service_handler import WS_SERVICE_HANDLER
 
                 await WS_SERVICE_HANDLER.handle_message(
                     WsReceive.from_json(message_data)

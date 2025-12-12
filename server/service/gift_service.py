@@ -5,8 +5,9 @@ import logging
 import os
 from asyncio import StreamReader
 from asyncio.subprocess import Process
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Optional
 
+from common.defines import ROOM_OUT_MSG_HEADER
 from common.file_obs_async import global_file_monitor
 from .message_center import MESSAGE_CENTER
 from ..base import Result, WsResult, RoomTotalWsResult, LogWsResult, GiftWsResult
@@ -25,12 +26,10 @@ class CrawlOutputHandler(object):
             line = await stream.readline()
             if not line:
                 break
-            line = line.decode().rstrip()
+            line = line.decode().strip()
             _LOGGER.debug(f"[{stream_name}] {line}")
 
-            if ("下单了" in line) or (
-                "送" in line and "个" in line
-            ):
+            if line and line.startswith(ROOM_OUT_MSG_HEADER):
                 ret = GiftWsResult(
                     timestamp=WsResult.get_timestamp(),
                     data=line,
@@ -54,7 +53,7 @@ class GiftService(object):
 
     def __init__(self, ):
         self.check_room_ids = set()
-        self.run_tasks: Dict[str, Process] = {}
+        self.run_tasks: Dict[str, Optional[Process]] = {}
 
         self._output_handler = CrawlOutputHandler()
 
@@ -73,13 +72,14 @@ class GiftService(object):
         for room_id in room_ids.split(','):
             room_id = room_id.strip()
             if room_id in self.check_room_ids:
-                return False, f'{room_id} already checked'
+                continue
+                # return False, f'{room_id} already checked'
             tmp_ids.add(room_id)
 
         self.check_room_ids.update(tmp_ids)
         await self.notify_room()
 
-        asyncio.create_task(self._start_check(room_ids))
+        asyncio.create_task(self._start_check(",".join(list(tmp_ids))))
         return True, None
 
     async def _start_check(self, room_ids: str):
@@ -108,9 +108,18 @@ class GiftService(object):
 
         stdout, stderr = await process.communicate()
 
+        ret = True
         if process.returncode != 0:
-            return False
-        return True
+            ret = False
+
+        # 进程结束后, 需要移除对应的直播间
+        self.run_tasks[room_ids] = None
+        for room_id in room_ids.split(','):
+            self.check_room_ids.remove(room_id)
+        # 发消息
+        MESSAGE_CENTER.notify_room(room_ids=self.check_room_ids)
+
+        return ret
 
     async def clear(self):
 

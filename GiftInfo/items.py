@@ -22,8 +22,13 @@ class GiftInfoItem(scrapy.Item):
 
     # 礼物
     gift_name = scrapy.Field()
+    # 直播间
     room = scrapy.Field()
     time = scrapy.Field()
+
+    # 时间戳轮次, 这里是不是要注意一下时区问题?
+    #   服务器是成都的, 不用弄时区
+    time_round = scrapy.Field()
 
     def __getattr__(self, name):
         if name in self.fields:

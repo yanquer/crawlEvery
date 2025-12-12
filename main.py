@@ -4,8 +4,12 @@ import os.path
 import sys
 
 from dotenv import load_dotenv
+
+from common.utils import read_xlsx
+
 load_dotenv()
 
+os.makedirs("log", exist_ok=True)
 logging.basicConfig(level=logging.INFO, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
 logging.getLogger('scrapy-playwright').setLevel(logging.INFO)
 
@@ -78,8 +82,11 @@ def run_with_reactor():
 
 if __name__ == '__main__':
 
+    # dat = read_xlsx('resources/meta/统计.xlsx')
+    # print(dat)
+    # exit()
+
     print(f'Running in directory: {os.getcwd()}')
-    os.makedirs("log", exist_ok=True)
     # logging.basicConfig(level=logging.DEBUG, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
     # logging.basicConfig(level=logging.INFO, filename="log/spider.log", format="%(asctime)s - %(levelname)s - %(message)s")
 
