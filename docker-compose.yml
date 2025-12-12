@@ -22,6 +22,7 @@ services:
       - "8091:8091"
     volumes:
       - "./log:/usr/src/app/log"
+      - "./resources/details:/usr/src/app/resources/details"
 
 #  nginx-web:
 #    restart: unless-stopped
