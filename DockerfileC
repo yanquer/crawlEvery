@@ -26,7 +26,7 @@ WORKDIR /usr/src/app
 COPY ./pyproject.toml .
 COPY ./uv.lock .
 COPY ./.python-version .
-COPY ./resources .
+COPY ./resources/ ./resources/
 
 RUN python -m venv .venv && . .venv/bin/activate && \
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/ && \
