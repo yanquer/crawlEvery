@@ -214,7 +214,7 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
 
             ITEM_PIPELINES={
                 'GiftInfo.pipelines.JsonWriterPipeline': 3,
-                'GiftInfo.pipelines.JsonWriterDayPipeline': 4,
+                'GiftInfo.pipelines.JsonWriterTimeRangePipeline': 4,
                 # 'GiftInfo.pipelines.ImageSavePipeline': None,
             },
 
