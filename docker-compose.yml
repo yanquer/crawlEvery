@@ -12,7 +12,7 @@ services:
     # docker build -t myapp -f resources/docker/Dockerfile .
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./DockerfileC
     #      args:
     #        BUILDKIT_PROGRESS: plain  # 进度输出格式
     #    network_mode: "host"
