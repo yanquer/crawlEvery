@@ -7,7 +7,7 @@ from asyncio import StreamReader
 from asyncio.subprocess import Process
 from typing import Dict, List, Set, Optional
 
-from common.defines import ROOM_OUT_MSG_HEADER
+from common.defines import ROOM_OUT_MSG_HEADER, IS_DEBUG_MODE
 from common.file_obs_async import global_file_monitor
 from .message_center import MESSAGE_CENTER
 from ..base import Result, WsResult, RoomTotalWsResult, LogWsResult, GiftWsResult
@@ -90,7 +90,7 @@ class GiftService(object):
 
         process = await asyncio.create_subprocess_exec(
             # 'python3',
-            '/usr/src/app/.venv/bin/python',
+            '/usr/src/app/.venv/bin/python' if not IS_DEBUG_MODE else "python3",
             'main.py',
             env=_env,
             cwd=PROJECT_ROOT,

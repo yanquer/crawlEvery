@@ -2,6 +2,7 @@
 import {Box, Flex, ScrollArea, Theme, ThemePanel, Text, Heading, Button, Badge, Grid} from "@radix-ui/themes";
 import {type ReactNode, useEffect, useState} from "react";
 import {WsClient} from "../common/ws_/simple-ws-client";
+import {WS_URL} from "../common/defines.ts";
 
 
 export const LeftArea = ({
@@ -47,13 +48,12 @@ export const LeftArea = ({
             </Heading>
 
             <ScrollArea type="always" scrollbars="vertical" style={{ height: '80%' }}>
-                <Box p="2" pr="8">
+                <Box p="2" pr="8" width={'85%'}>
                     {/*<Heading size="4" mb="2" trim="start">*/}
                     {/*    Principles of the typographic craft*/}
                     {/*</Heading>*/}
-                    <Flex direction="column" gap="4">
-                        {...text}
-                    </Flex>
+                    {...text}
+
                 </Box>
             </ScrollArea>
         </Flex>
@@ -170,7 +170,7 @@ export const Body = () => {
         for (let i = 0; i < 3; i++) {
             try {
                 // WsClient.shared = new WsClient('http://localhost:8091/ws/room');
-                WsClient.shared = new WsClient('ws://8.156.64.230:80/ws/room');
+                WsClient.shared = new WsClient(WS_URL);
                 break;
             } catch (e) {
                 console.error(e);

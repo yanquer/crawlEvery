@@ -175,7 +175,8 @@ class HuyaSpider(BasePlayWrightSpider):
         #     await asyncio.sleep(3)
 
         open_win = False
-        await page.wait_for_timeout(5 * 1000)
+        # 服务器上带宽低, 等长点时间
+        await page.wait_for_timeout(20 * 1000)
         text = ""
 
         while 1:
