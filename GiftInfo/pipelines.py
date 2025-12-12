@@ -195,11 +195,12 @@ class JsonWriterTimeRangePipeline:
         if not item.time_round:
             return item
 
+        date_now = datetime.datetime.now().strftime("%Y-%m-%d")
+        al_out = False
         if (self._last_time_round is not None) and (
                 self._last_time_round != item.time_round
         ):
             # 记录当前的, 清空,
-            date_now = datetime.datetime.now().strftime("%Y-%m-%d")
             # ensure_ascii=False , 中文正常解码
             with open(self._file_name, "a+", encoding="utf-8") as f:
                 line = json.dumps({
@@ -207,6 +208,7 @@ class JsonWriterTimeRangePipeline:
                 }, ensure_ascii=False) + "\n"
                 f.write(line)
                 print(f'{ROOM_OUT_MSG_HEADER}{line}')
+                al_out = True
             self._current_range_data = {}
             self._last_time_round = item.time_round
         if self._last_time_round is None:
@@ -248,5 +250,12 @@ class JsonWriterTimeRangePipeline:
                             gm: 0 for gm in self._filter_gift_names
                         }
                     room_url_dat[item.user_name][item.gift_name] += cur_num
+
+        if self._last_time_round:
+            if not al_out:
+                line = json.dumps({
+                    f"{self._last_time_round}@@@{date_now}": self._current_range_data
+                }, ensure_ascii=False) + "\n"
+                print(f'{ROOM_OUT_MSG_HEADER}{line}')
 
         return item
