@@ -32,9 +32,9 @@ COPY ./pyproject.toml .
 COPY ./uv.lock .
 COPY ./.python-version .
 
-RUN . .venv/bin/activate && uv sync
+# RUN . .venv/bin/activate && uv sync
 #RUN . .venv/bin/activate && pip install scrapy-playwright>=0.0.44
-# RUN . .venv/bin/activate && UV_PYTHON_INSTALL_MIRROR=https://mirror.nju.edu.cn/github-release/indygreg/python-build-standalone/ uv sync
+RUN . .venv/bin/activate && UV_PYTHON_INSTALL_MIRROR=https://mirror.nju.edu.cn/github-release/indygreg/python-build-standalone/ uv sync
 RUN . .venv/bin/activate && playwright install
 # 验证浏览器安装
 #RUN . .venv/bin/activate && playwright install-deps && \
