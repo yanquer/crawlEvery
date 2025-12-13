@@ -20,7 +20,7 @@ _LOGGER = logging.getLogger(__name__)
 class CrawlOutputHandler(object):
     check_room_ids: Set[str]
 
-    _need_always_msg: Dict[str, Union[WsResult, List[WsResult]]] = []
+    _need_always_msg: Dict[str, Union[WsResult, List[WsResult]]] = {}
     async def need_always_send(self):
         """ 有些消息需要一直发, 来解决前端刷新页面后就没了的情况 """
         while 1:
