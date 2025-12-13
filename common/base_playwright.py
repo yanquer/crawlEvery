@@ -9,7 +9,7 @@ from scrapy import Request
 from scrapy.http import Response
 from scrapy_playwright.page import PageMethod
 
-from .defines import CUSTOM_LOG
+from .defines import CUSTOM_LOG, IS_DEBUG_MODE
 from .logger_ import LoggerEvery
 
 _LOGGER = logging.getLogger(__name__)
@@ -144,7 +144,7 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
     SAVE_DIR = "resources/gift"
     # 并发数
     CONCURRENT_REQUESTS = 25
-    HEADLESS = True
+    HEADLESS = not IS_DEBUG_MODE
     PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 10 * 60 * 1000,  # 10 min
 
     @staticmethod

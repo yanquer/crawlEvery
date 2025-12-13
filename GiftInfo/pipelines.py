@@ -159,6 +159,7 @@ class JsonWriterTimeRangePipeline:
         每到下一轮次出发一次记录
     """
 
+    # 每次只记录当前轮次数据
     _time_range_data = {}
     _file_name = ''
 
@@ -175,11 +176,6 @@ class JsonWriterTimeRangePipeline:
         # self._file.close()
         ...
 
-
-    # 每次只记录当前轮次数据
-    _current_range_data = {
-
-    }
     _filter_gift_names = {
         '带你环游', '心动鸭'
     }
@@ -204,12 +200,12 @@ class JsonWriterTimeRangePipeline:
             # ensure_ascii=False , 中文正常解码
             with open(self._file_name, "a+", encoding="utf-8") as f:
                 line = json.dumps({
-                    f"{self._last_time_round}@@@{date_now}": self._current_range_data
+                    f"{self._last_time_round}@@@{date_now}": self._time_range_data
                 }, ensure_ascii=False) + "\n"
                 f.write(line)
                 print(f'{ROOM_OUT_MSG_HEADER}{line}')
                 al_out = True
-            self._current_range_data = {}
+            self._time_range_data = {}
             self._last_time_round = item.time_round
         if self._last_time_round is None:
             self._last_time_round = item.time_round
@@ -254,7 +250,7 @@ class JsonWriterTimeRangePipeline:
         if self._last_time_round:
             if not al_out:
                 line = json.dumps({
-                    f"{self._last_time_round}@@@{date_now}": self._current_range_data
+                    f"{self._last_time_round}@@@{date_now}": self._time_range_data
                 }, ensure_ascii=False) + "\n"
                 print(f'{ROOM_OUT_MSG_HEADER}{line}')
 

@@ -38,3 +38,5 @@ dist-ssr
 *.sw?
 
 docker-compose.yml
+resources/details1
+

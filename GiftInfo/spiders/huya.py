@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import logging
+import os
 from typing import List, Optional
 
 from playwright.async_api import ElementHandle, Page
@@ -11,7 +12,9 @@ from scrapy.selector import SelectorList
 from GiftInfo import CHECK_ROOMS
 from GiftInfo.items import GiftInfoItem
 from common.base_playwright import BasePlayWrightSpider
+from common.defines import IS_DEBUG_MODE
 from common.js_helper import JS_MUTE
+from common.utils import get_rooms
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +29,7 @@ class HuyaSpider(BasePlayWrightSpider):
     #     '13168',
     #     'beisheng1117',
     # ]
-    room_ids = CHECK_ROOMS
+    room_ids = CHECK_ROOMS if not IS_DEBUG_MODE else (['13168'] + get_rooms())
 
     CONCURRENT_REQUESTS = len(room_ids)
     _REUSE_PAGE = True
@@ -102,7 +105,7 @@ class HuyaSpider(BasePlayWrightSpider):
                     user_name = msg_list[0]
                     up_name = msg_list[2]
 
-                    gift_info = msg_list[4].split('×')
+                    gift_info = msg_list[4].split('×')[0]
                     # print(gift_info)
                     up_namespan_gift_desc = gift_info[0]
                     gift_num = gift_info[1]
@@ -136,6 +139,8 @@ class HuyaSpider(BasePlayWrightSpider):
             s: str
             if m.isdigit() and s.isdigit():
                 return int(m) * 60 + int(s)
+        elif time_str.isdigit():
+            return int(time_str)
         return 0
 
     # 记录最近一次的时间戳轮次
@@ -154,8 +159,9 @@ class HuyaSpider(BasePlayWrightSpider):
             如果在轮次, 以时间命名轮次,
             如果不在轮次, 返回 None
         """
-        _LOGGER.info(f'准备自动化打开带你环游窗口')
-        page = response.meta['playwright_page']
+        room_ = os.path.basename(url)
+        _LOGGER.info(f'{room_} 准备自动化打开带你环游窗口')
+        page: Page = response.meta['playwright_page']
 
         # 判断一下是否打开 游戏窗口
         #   倒计时心形窗口
@@ -176,19 +182,31 @@ class HuyaSpider(BasePlayWrightSpider):
 
         open_win = False
         # 服务器上带宽低, 等长点时间
-        await page.wait_for_timeout(20 * 1000)
+        await page.wait_for_timeout(2 * 1000)
         text = ""
 
+        idx_ = 0
         while 1:
+            idx_ += 1
+            # todo: 后续优化下判断, 不重复打开
             if (not go_word_wind_heart) and (not open_win):
                 ...
                 # 尝试将心动环游点出来
                 # await page.hover('.more-activity-icon')
                 # await page.wait_for_timeout(0.1 * 1000)
                 # await page.click('.more-activity-icon')
+                # 先移动到其他位置, 不然不一定会触发
+                await self._move_mouse_to_css_center(response=response, css_selector='body')
+                # 看看更多加载出来没有, 没有就刷新页面
+                more_ac_btn = await page.query_selector('.more-activity-icon')
+                if not more_ac_btn:
+                    _LOGGER.info(f'{room_} 未检测到更多按钮, 刷新页面')
+                    await page.reload()
+                    await page.wait_for_timeout(idx_ * 5 * 1000)
                 if await self._move_mouse_to_css_center(response=response, css_selector='.more-activity-icon'):
                     # await asyncio.sleep(60)
-                    _LOGGER.info(f'{url} 点击 带你环游')
+                    _LOGGER.info(f'{room_} 点击 带你环游')
+                    await page.wait_for_timeout(1 * 1000)
                     await page.click(heart_btn_css)
                     await page.wait_for_timeout(0.5 * 1000)
                     # 可能会出现请求权限窗口, 检查一下然后允许
@@ -235,7 +253,7 @@ class HuyaSpider(BasePlayWrightSpider):
             else:
                 break
 
-        _LOGGER.info(f'成功找到带你环游窗口 {text}')
+        _LOGGER.info(f'{room_} 成功找到带你环游窗口倒计时消息 {text}')
         # text_div = await go_word_wind_heart.query_selector('.css-1dbjc4n.r-1awozwy')
         # css-1dbjc4n r-1awozwy
         # msg_1_div = await text_div.query_selector('.css-1dbjc4n.r-1awozwy')
@@ -288,7 +306,16 @@ class HuyaSpider(BasePlayWrightSpider):
         page = response.meta['playwright_page']
         url = response.url
 
+        # 如果找不到房间号
+        if 'error?errorType=ROOM_NOT_FOUND' in url:
+            _LOGGER.warning(f'找不到房间 {url}')
+            await page.close()
+            return
+
         while 1:
+
+            # 把视频页面关掉, 看看能不能降低一点流量与占用
+            await page.evaluate("document.querySelectorAll('#videoContainer > .player-wrap').forEach(e => e.remove())")
 
             # todo: 放到 docker 里了 暂时取消主动登录
             #   如果需要登陆, 改成手动登了, 提交代码上去
