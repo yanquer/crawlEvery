@@ -26,6 +26,11 @@ class WsServiceHandler(object):
 
         room_ids_str = ','.join(used)
         await GIFT_SERVICE.check_rooms(room_ids_str)
+        await self._background_task()
+
+    async def _background_task(self, ):
+        from .gift_service import GIFT_SERVICE
+        GIFT_SERVICE.create_task()
 
     async def handle_message(self, ws_data: WsReceive):
         from server.service.gift_service import GIFT_SERVICE

@@ -20,7 +20,7 @@ class CrawlOutputHandler(object):
     check_room_ids: Set[str]
 
     _need_always_msg: Dict[str, Union[WsResult, List[WsResult]]] = []
-    async def _need_always_send(self):
+    async def need_always_send(self):
         """ 有些消息需要一直发, 来解决前端刷新页面后就没了的情况 """
         while 1:
             for ws_ret in self._need_always_msg.values():
@@ -79,7 +79,8 @@ class GiftService(object):
         if self._already_create:
             return
         self._already_create = True
-        asyncio.create_task(MESSAGE_CENTER.send_alive_message())
+        # asyncio.create_task(MESSAGE_CENTER.send_alive_message())
+        asyncio.create_task(self._output_handler.need_always_send())
 
     async def check_rooms(self, room_ids: str):
 
