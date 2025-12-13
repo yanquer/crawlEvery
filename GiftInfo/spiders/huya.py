@@ -207,7 +207,7 @@ class HuyaSpider(BasePlayWrightSpider):
                 more_ac_btn = await page.query_selector('.more-activity-icon')
                 if not more_ac_btn:
                     _LOGGER.info(f'{room_} 未检测到更多按钮, 刷新页面')
-                    await page.reload()
+                    await self.reload(page=page)
                     await page.wait_for_timeout(idx_ * 5 * 1000)
                 if await self._move_mouse_to_css_center(response=response, css_selector='.more-activity-icon'):
                     # await asyncio.sleep(60)
@@ -302,7 +302,7 @@ class HuyaSpider(BasePlayWrightSpider):
                         return True
 
             _LOGGER.info(f'{url} 等待登录中...')
-            await page.reload()
+            await self.reload(page=page)
             # 等半分钟, 因为人工登录的时候要一会儿
             await page.wait_for_timeout(1 * 30 * 1000)
 

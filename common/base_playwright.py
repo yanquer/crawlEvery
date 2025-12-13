@@ -5,6 +5,7 @@ import os
 from typing import Iterable
 
 import scrapy
+from playwright.async_api import Page
 from scrapy import Request
 from scrapy.http import Response
 from scrapy_playwright.page import PageMethod
@@ -22,6 +23,10 @@ LoggerEvery.add_rotating_log_handler(_LOGGER, CUSTOM_LOG, logging.DEBUG)
 
 class BasePlaywrightHelper(object):
     """ 主要定义一些辅助方法 """
+
+    @classmethod
+    async def reload(cls, page: Page):
+        await page.reload(timeout=0)
 
     async def _move_mouse_to_css_center(self, response: Response, css_selector: str):
         """ 将鼠标移动要元素正中心
