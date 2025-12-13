@@ -14,7 +14,7 @@ from itemadapter import ItemAdapter
 
 from GiftInfo.items import GiftInfoItem
 from common.base import SimpleModel
-from common.defines import ROOM_OUT_MSG_HEADER
+from common.defines import ROOM_OUT_MSG_HEADER, IS_DEBUG_MODE
 from common.utils import get_rooms
 
 _LOGGER = logging.getLogger(__name__)
@@ -337,6 +337,9 @@ class JsonWriterTimeRangePipeline:
         ret_dict = [x.get_dict() for x in ret]
         line = json.dumps(ret_dict, ensure_ascii=False) + "\n"
         print(f'{ROOM_OUT_MSG_HEADER}{line}')
+        # todo: 服务器上抓不到 print, 临时方案
+        if not IS_DEBUG_MODE:
+            _LOGGER.warning(f'{ROOM_OUT_MSG_HEADER}{line}')
 
 
 
