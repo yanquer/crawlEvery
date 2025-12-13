@@ -3,6 +3,7 @@ import asyncio
 import copy
 import logging
 import os
+import random
 from asyncio import StreamReader
 from asyncio.subprocess import Process
 from typing import Dict, List, Set, Optional, Union
@@ -23,15 +24,18 @@ class CrawlOutputHandler(object):
     async def need_always_send(self):
         """ 有些消息需要一直发, 来解决前端刷新页面后就没了的情况 """
         while 1:
-            for ws_ret in self._need_always_msg.values():
-                if ws_ret:
-                    if isinstance(ws_ret, WsResult):
-                        await MESSAGE_CENTER.handle_message(ws_ret)
-                    elif isinstance(ws_ret, list):
-                        for one in ws_ret:
-                            if isinstance(one, WsResult):
-                                await MESSAGE_CENTER.handle_message(one)
+            await self._handle_always_msg()
             await asyncio.sleep(1)
+
+    async def _handle_always_msg(self, ):
+        for ws_ret in self._need_always_msg.values():
+            if ws_ret:
+                if isinstance(ws_ret, WsResult):
+                    await MESSAGE_CENTER.handle_message(ws_ret)
+                elif isinstance(ws_ret, list):
+                    for one in ws_ret:
+                        if isinstance(one, WsResult):
+                            await MESSAGE_CENTER.handle_message(one)
 
     # 实时读取标准输出
     async def read_stream(self, stream: StreamReader, stream_name: str):
@@ -43,6 +47,9 @@ class CrawlOutputHandler(object):
             line = line.decode().strip()
             _LOGGER.debug(f"[{stream_name}] {line}")
 
+            # todo: 临时放这, 随机发
+            if random.choice([True, False]):
+                await self._handle_always_msg()
             if line and ROOM_OUT_MSG_HEADER in line:
                 ret = GiftWsResult(
                     timestamp=WsResult.get_timestamp(),
