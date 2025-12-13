@@ -333,7 +333,7 @@ class HuyaSpider(BasePlayWrightSpider):
 
                 page_response_lastest = await self.refresh_playwright_response(response, 1000)
                 await page.wait_for_timeout(1000)  # 等待 1 秒，确保内容加载
-                await page.evaluate(JS_MUTE)
+                await self.exec_js(page=page, js_str=JS_MUTE)
 
                 # 时间轮次
                 current_time_round = await self._parse_current_go_word(url=url,

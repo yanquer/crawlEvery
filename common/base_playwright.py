@@ -24,6 +24,12 @@ LoggerEvery.add_rotating_log_handler(_LOGGER, CUSTOM_LOG, logging.DEBUG)
 class BasePlaywrightHelper(object):
     """ 主要定义一些辅助方法 """
 
+    async def exec_js(self, *, page: Page, js_str: str):
+        try:
+            await page.evaluate(js_str)
+        except Exception as e:
+            _LOGGER.error(f"skip, page {page.url} execute js {js_str} error: {e}")
+
     @classmethod
     async def reload(cls, page: Page):
         await page.reload(timeout=0)
