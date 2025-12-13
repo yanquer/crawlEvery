@@ -153,6 +153,10 @@ class ShowTableRow(SimpleModel):
     # 环游合计
     word_count_total: int = None
 
+    # 心动鸭
+    duck_count: int = None
+    duck_count_total: int = None
+
 
 class JsonWriterTimeRangePipeline:
     """ 按照轮次与直播间统计
@@ -314,6 +318,7 @@ class JsonWriterTimeRangePipeline:
             room_id="合计",
             room_name="所有直播间",
             word_count_total=cur_dat['all_total']["带你环游"],
+            duck_count_total=cur_dat['all_total']['心动鸭']
         ))
 
         # 再拿剩下的, 直播间
@@ -331,6 +336,8 @@ class JsonWriterTimeRangePipeline:
                 room_name=room_name,
                 word_count=url_k_dat['带你环游'],
                 word_count_total=url_k_dat['带你环游'],
+                duck_count=url_k_dat['心动鸭'],
+                duck_count_total=url_k_dat['心动鸭'],
             ))
 
         # 输出
