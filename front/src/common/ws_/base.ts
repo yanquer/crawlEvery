@@ -30,6 +30,10 @@ export interface GiftShowTableRow{
     word_count?: number
     // 环游合计
     word_count_total?: number
+
+    // 心动鸭
+    duck_count?: number
+    duck_count_total?: number
 }
 
 

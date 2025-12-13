@@ -262,7 +262,9 @@ export const TableArea = ({
                         <Table.ColumnHeaderCell>直播间号</Table.ColumnHeaderCell>
                         <Table.ColumnHeaderCell>直播间名称</Table.ColumnHeaderCell>
                         <Table.ColumnHeaderCell>本轮环游个数合计</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮环游个数</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮环游总个数</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮心动鸭个数</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮心动鸭总个数</Table.ColumnHeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -276,6 +278,8 @@ export const TableArea = ({
                                 <Table.Cell>{row.room_name}</Table.Cell>
                                 <Table.Cell>{row.word_count}</Table.Cell>
                                 <Table.Cell>{row.word_count_total}</Table.Cell>
+                                <Table.Cell>{row.duck_count}</Table.Cell>
+                                <Table.Cell>{row.duck_count_total}</Table.Cell>
                             </Table.Row>
                         ))
                     }
