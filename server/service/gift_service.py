@@ -29,7 +29,7 @@ class CrawlOutputHandler(object):
             line = line.decode().strip()
             _LOGGER.debug(f"[{stream_name}] {line}")
 
-            if line and ROOM_OUT_MSG_HEADER in line.startswith:
+            if line and ROOM_OUT_MSG_HEADER in line:
                 ret = GiftWsResult(
                     timestamp=WsResult.get_timestamp(),
                     data=line.split(ROOM_OUT_MSG_HEADER)[1].strip(),
