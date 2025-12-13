@@ -34,6 +34,8 @@ class HuyaSpider(BasePlayWrightSpider):
     CONCURRENT_REQUESTS = len(room_ids)
     _REUSE_PAGE = True
 
+    _sep = asyncio.Semaphore(CONCURRENT_REQUESTS)
+
     # HEADLESS = False
 
     def start_requests(self):
@@ -303,40 +305,44 @@ class HuyaSpider(BasePlayWrightSpider):
         return False
 
     async def parse(self, response, **kwargs):
-        page = response.meta['playwright_page']
-        url = response.url
 
-        # 如果找不到房间号
-        if 'error?errorType=ROOM_NOT_FOUND' in url:
-            _LOGGER.warning(f'找不到房间 {url}')
-            await page.close()
-            return
+        # 并发支持
+        async with self._sep:
 
-        while 1:
+            page = response.meta['playwright_page']
+            url = response.url
 
-            # 把视频页面关掉, 看看能不能降低一点流量与占用
-            await page.evaluate("document.querySelectorAll('#videoContainer > .player-wrap').forEach(e => e.remove())")
+            # 如果找不到房间号
+            if 'error?errorType=ROOM_NOT_FOUND' in url:
+                _LOGGER.warning(f'找不到房间 {url}')
+                await page.close()
+                return
 
-            # todo: 放到 docker 里了 暂时取消主动登录
-            #   如果需要登陆, 改成手动登了, 提交代码上去
-            # await self._wait_for_login_by_text(response=response,)
+            while 1:
 
-            page_response_lastest = await self.refresh_playwright_response(response, 1000)
-            await page.wait_for_timeout(1000)  # 等待 1 秒，确保内容加载
-            await page.evaluate(JS_MUTE)
+                # 把视频页面关掉, 看看能不能降低一点流量与占用
+                await page.evaluate("document.querySelectorAll('#videoContainer > .player-wrap').forEach(e => e.remove())")
 
-            # 时间轮次
-            current_time_round = await self._parse_current_go_word(url=url,
-                                                                   page_response_lastest=page_response_lastest,
-                                                                   response=response)
+                # todo: 放到 docker 里了 暂时取消主动登录
+                #   如果需要登陆, 改成手动登了, 提交代码上去
+                # await self._wait_for_login_by_text(response=response,)
 
-            for msg_ret in self._parse_msg(url=url, page_response_lastest=page_response_lastest):
-                msg_ret: Optional[GiftInfoItem]
-                if msg_ret:
-                    msg_ret['time_round'] = current_time_round
-                    yield msg_ret
+                page_response_lastest = await self.refresh_playwright_response(response, 1000)
+                await page.wait_for_timeout(1000)  # 等待 1 秒，确保内容加载
+                await page.evaluate(JS_MUTE)
 
-            # 一分钟刷新一次, 如果消息多, 需要更短间隔时间
-            # await asyncio.sleep(1*60)
-            # 提高准确性, 半秒钟刷新一次
-            await page.wait_for_timeout(0.5 * 1 * 1000)
+                # 时间轮次
+                current_time_round = await self._parse_current_go_word(url=url,
+                                                                       page_response_lastest=page_response_lastest,
+                                                                       response=response)
+
+                for msg_ret in self._parse_msg(url=url, page_response_lastest=page_response_lastest):
+                    msg_ret: Optional[GiftInfoItem]
+                    if msg_ret:
+                        msg_ret['time_round'] = current_time_round
+                        yield msg_ret
+
+                # 一分钟刷新一次, 如果消息多, 需要更短间隔时间
+                # await asyncio.sleep(1*60)
+                # 提高准确性, 半秒钟刷新一次
+                await page.wait_for_timeout(0.5 * 1 * 1000)
