@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.57.0-noble
+FROM mcr.microsoft.com/playwright/python:v1.56.0-noble
 
 # 安装 Python 3, pip 及基本工具
 RUN apt-get update && \
