@@ -5,7 +5,7 @@ import logging
 import os
 from asyncio import StreamReader
 from asyncio.subprocess import Process
-from typing import Dict, List, Set, Optional
+from typing import Dict, List, Set, Optional, Union
 
 from common.defines import ROOM_OUT_MSG_HEADER, IS_DEBUG_MODE
 from common.file_obs_async import global_file_monitor
@@ -18,6 +18,20 @@ _LOGGER = logging.getLogger(__name__)
 
 class CrawlOutputHandler(object):
     check_room_ids: Set[str]
+
+    _need_always_msg: Dict[str, Union[WsResult, List[WsResult]]] = []
+    async def _need_always_send(self):
+        """ 有些消息需要一直发, 来解决前端刷新页面后就没了的情况 """
+        while 1:
+            for ws_ret in self._need_always_msg.values():
+                if ws_ret:
+                    if isinstance(ws_ret, WsResult):
+                        await MESSAGE_CENTER.handle_message(ws_ret)
+                    elif isinstance(ws_ret, list):
+                        for one in ws_ret:
+                            if isinstance(one, WsResult):
+                                await MESSAGE_CENTER.handle_message(one)
+            await asyncio.sleep(1)
 
     # 实时读取标准输出
     async def read_stream(self, stream: StreamReader, stream_name: str):
@@ -34,6 +48,7 @@ class CrawlOutputHandler(object):
                     timestamp=WsResult.get_timestamp(),
                     data=line.split(ROOM_OUT_MSG_HEADER)[1].strip(),
                 )
+                self._need_always_msg["gift"] = ret
             else:
                 ret = LogWsResult(
                     timestamp=WsResult.get_timestamp(),
