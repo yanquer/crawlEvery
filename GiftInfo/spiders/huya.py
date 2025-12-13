@@ -29,7 +29,7 @@ class HuyaSpider(BasePlayWrightSpider):
     #     '13168',
     #     'beisheng1117',
     # ]
-    room_ids = CHECK_ROOMS if not IS_DEBUG_MODE else (['13168'] + get_rooms())
+    room_ids = CHECK_ROOMS if not IS_DEBUG_MODE else ([] + get_rooms())
 
     CONCURRENT_REQUESTS = len(room_ids)
     _REUSE_PAGE = True
@@ -313,7 +313,7 @@ class HuyaSpider(BasePlayWrightSpider):
         # 并发支持
         async with self._sep:
 
-            page = response.meta['playwright_page']
+            page: Page = response.meta['playwright_page']
             url = response.url
 
             # 如果找不到房间号
@@ -321,6 +321,10 @@ class HuyaSpider(BasePlayWrightSpider):
                 _LOGGER.warning(f'找不到房间 {url}')
                 await page.close()
                 return
+
+            _LOGGER.debug(f'等待页面 {url} 加载完成')
+            await page.wait_for_load_state('domcontentloaded', timeout=0)
+            _LOGGER.debug(f'页面 {url} 加载完成')
 
             while 1:
 
