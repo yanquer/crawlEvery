@@ -1,14 +1,20 @@
 // @ts-ignore
-import {Box, Flex, ScrollArea, Theme, ThemePanel, Text, Heading, Button, Badge, Grid} from "@radix-ui/themes";
+import {Box, Flex, ScrollArea, Theme, ThemePanel, Text, Heading, Button, Badge, Grid, Table} from "@radix-ui/themes";
 import {type ReactNode, useEffect, useState} from "react";
 import {WsClient} from "../common/ws_/simple-ws-client";
 import {WS_URL} from "../common/defines.ts";
+import type {GiftShowTableRow} from "../common/ws_/base.ts";
 
 
 export const LeftArea = ({
                              areaTitle="运行日志",
                              subEvent="log",
+                             show=true,
                          }) => {
+
+    if (!show){
+        return <></>
+    }
 
     const [text, setText] = useState<Array<ReactNode>>([]);
 
@@ -17,11 +23,16 @@ export const LeftArea = ({
         WsClient.shared?.subscribe(subEvent, async (data) => {
             // console.log(data);
             if (data){
+                let text: string = data.data
+                if (text.startsWith("=====") && text.includes("@@@")){
+                    text = text.split("@@@")[1]
+                    text = '"' + text
+                }
                 setText((lastData) => {
                     lastData.push(
                         <Text as="p" key={lastData.length+1}>
                             {/*[{data.timestamp}]*/}
-                            {data.data}
+                            {text}
                         </Text>
                     )
                     // console.log('lastData')
@@ -33,15 +44,15 @@ export const LeftArea = ({
 
     }, [])
 
-    return <Box width={'50%'} height={'100%'} p={'4'}
+    return <Box width={'100%'} height={'100%'} p={'4'}
         // className={'bg-gray-800'}
     >
         <Flex width={'100%'} height={'100%'}
-              justify={'center'}
+              // justify={'center'}
               direction={'column'}
               // className={'bg-gray-800'}
         >
-            <Heading size="4" m="2" trim="start"
+            <Heading size="4" trim="start" mb={'2'}
                      align={'center'}
                      color="gold">
                 {areaTitle}
@@ -59,9 +70,9 @@ export const LeftArea = ({
         </Flex>
     </Box>
 }
-export const RightArea = () => {
+export const RightArea = ({show=true}) => {
 
-    return <LeftArea areaTitle={'礼物消息'} subEvent={'gift'} />;
+    return <LeftArea areaTitle={'礼物消息'} subEvent={'gift'} show={show} />;
 }
 
 export const ListenRooms = ({areaTitle="已在监听的直播间"}) => {
@@ -120,46 +131,185 @@ export const ListenRooms = ({areaTitle="已在监听的直播间"}) => {
 
     return <Box width={'100%'} height={'100%'} p={'4'}
         // className={'bg-gray-700'}
-        className={
-            'shadow-2xs bg-gray-500 rounded-lg'
-        }
-                m={'5'}
+
+                // m={'5'}
     >
-        <Flex width={'100%'} height={'100%'}
-              justify={'center'}
-              direction={'column'}
-            // className={'bg-gray-800'}
+        <Box
+            width={'100%'} height={'100%'}
+            className={
+                'shadow-2xs bg-gray-500 rounded-lg'
+            }
         >
-            <Heading size="4" m="2" trim="start"
-                     align={'center'}
-                     color="gold">
-                {areaTitle}
-            </Heading>
+            <Flex width={'100%'} height={'100%'}
+                  justify={'center'}
+                  direction={'column'}
+                // className={'bg-gray-800'}
+            >
+                <Heading size="4" m="2" trim="start"
+                         align={'center'}
+                         color="gold">
+                    {areaTitle}
+                </Heading>
 
-            <ScrollArea type="always" scrollbars="vertical" style={{ height: '80%' }}>
-                <Box p="2" pr="8">
-                    {/*<Heading size="4" mb="2" trim="start">*/}
-                    {/*    Principles of the typographic craft*/}
-                    {/*</Heading>*/}
-                    {/*<Flex direction="column" gap="4">*/}
-                    {/*    {...text}*/}
-                    {/*</Flex>*/}
+                <ScrollArea type="always" scrollbars="vertical" style={{ height: '80%' }}>
+                    <Box p="2" pr="8">
+                        {/*<Heading size="4" mb="2" trim="start">*/}
+                        {/*    Principles of the typographic craft*/}
+                        {/*</Heading>*/}
+                        {/*<Flex direction="column" gap="4">*/}
+                        {/*    {...text}*/}
+                        {/*</Flex>*/}
 
-                    {...text}
+                        {...text}
 
-                </Box>
-            </ScrollArea>
+                    </Box>
+                </ScrollArea>
+            </Flex>
+        </Box>
+    </Box>
+}
+
+
+interface ButtonGroupUtilProps {
+    parentSetLogRun: (run: boolean)=> any
+    parentSetGiftMsgRun: (run: boolean)=> any
+
+}
+export const ButtonGroupUtil = (props: ButtonGroupUtilProps) => {
+
+    const [runLog, setRunLog] = useState<boolean>(false);
+    const [runGiftMsg, setRunGiftMsg] = useState<boolean>(false);
+
+    return <Box width={'100%'} height={'50px'} p={'4'}
+        // className={'bg-gray-800'}
+    >
+
+        <Flex width={'100%'} height={'10%'}
+            // className={'bg-gray-800'}
+            direction={'row'}
+              gap={'2'}
+        >
+            <Button onClick={() => setRunLog(last => {
+                const cur = !last
+                props.parentSetLogRun(cur)
+                return cur
+            })} >{runLog ? "关闭运行日志" : "打开运行日志"}</Button>
+
+            <Button onClick={() => setRunGiftMsg(last => {
+                const cur = !last
+                props.parentSetGiftMsgRun(cur)
+                return cur
+            })} >{runGiftMsg ? "关闭礼物消息" : "打开礼物消息"}</Button>
         </Flex>
     </Box>
 }
 
 
-export const ButtonGroupUtil = () => {
+export const TableArea = ({
+                             areaTitle="合计",
+                             subEvent="gift",
+                             show=true,
+                         }) => {
+
+    if (!show){
+        return <></>
+    }
+
+    const [tableData, setTableData] = useState<Array<GiftShowTableRow>>([]);
+
+    useEffect(() => {
+
+        WsClient.shared?.subscribe(subEvent, async (data) => {
+            // console.log(data);
+            if (data){
+                let text: string = data.data
+
+                let tableRows: GiftShowTableRow[] = []
+
+                try {
+                    tableRows = JSON.parse(text)
+                } catch (e) {
+                    console.error(e)
+                }
+
+                if (tableRows && tableRows.length > 0){
+                    setTableData(tableRows)
+                }
+
+            }
+        }).then()
+
+    }, [])
+
     return <Box width={'100%'} height={'100%'} p={'4'}
         // className={'bg-gray-800'}
     >
+        <Flex width={'100%'} height={'100%'}
+              // justify={'center'}
+              direction={'column'}
+            // className={'bg-gray-800'}
+        >
+            <Heading size="4" trim="start" mb={'2'}
+                     align={'center'}
+                     color="gold">
+                {areaTitle}
+            </Heading>
 
-        <Button >请求重启</Button>
+            <Table.Root variant="surface">
+                <Table.Header>
+                    <Table.Row>
+                        <Table.ColumnHeaderCell>轮次</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>直播间号</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>直播间名称</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮环游个数合计</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮环游个数</Table.ColumnHeaderCell>
+                    </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+
+                    {
+                        tableData.map((row, index) => (
+                            <Table.Row key={index}>
+                                <Table.RowHeaderCell>{row.time_round}</Table.RowHeaderCell>
+                                <Table.Cell>{row.room_id}</Table.Cell>
+                                <Table.Cell>{row.room_name}</Table.Cell>
+                                <Table.Cell>{row.word_count}</Table.Cell>
+                                <Table.Cell>{row.word_count_total}</Table.Cell>
+                            </Table.Row>
+                        ))
+                    }
+
+                    {/*<Table.Row>*/}
+                    {/*    <Table.RowHeaderCell>Danilo Sousa</Table.RowHeaderCell>*/}
+                    {/*    <Table.Cell>danilo@example.com</Table.Cell>*/}
+                    {/*    <Table.Cell>Developer</Table.Cell>*/}
+                    {/*</Table.Row>*/}
+
+                    {/*<Table.Row>*/}
+                    {/*    <Table.RowHeaderCell>Zahra Ambessa</Table.RowHeaderCell>*/}
+                    {/*    <Table.Cell>zahra@example.com</Table.Cell>*/}
+                    {/*    <Table.Cell>Admin</Table.Cell>*/}
+                    {/*</Table.Row>*/}
+
+                    {/*<Table.Row>*/}
+                    {/*    <Table.RowHeaderCell>Jasper Eriksson</Table.RowHeaderCell>*/}
+                    {/*    <Table.Cell>jasper@example.com</Table.Cell>*/}
+                    {/*    <Table.Cell>Developer</Table.Cell>*/}
+                    {/*</Table.Row>*/}
+                </Table.Body>
+            </Table.Root>
+
+            {/*<ScrollArea type="always" scrollbars="vertical" style={{ height: '80%' }}>*/}
+            {/*    <Box p="2" pr="8" width={'85%'}>*/}
+            {/*        /!*<Heading size="4" mb="2" trim="start">*!/*/}
+            {/*        /!*    Principles of the typographic craft*!/*/}
+            {/*        /!*</Heading>*!/*/}
+            {/*        {...text}*/}
+
+            {/*    </Box>*/}
+            {/*</ScrollArea>*/}
+        </Flex>
     </Box>
 }
 
@@ -178,6 +328,9 @@ export const Body = () => {
         }
 
     }, [])
+
+    const [leftShow, setLeftShow] = useState<boolean>(false)
+    const [rightShow, setRightShow] = useState<boolean>(false)
 
     const invert = 20
     return <Theme className={'w-full h-full'}
@@ -213,7 +366,7 @@ export const Body = () => {
                     gap={"2"}
                     pb={"4px"}
                     direction={'row'}
-                    height={"20%"}
+                    height={"30%"}
                     width={"100%"}
                     justify={"center"}
                 >
@@ -222,13 +375,14 @@ export const Body = () => {
                             justify={'center'}
                             width={'100%'}
                             height={'100%'}
-                            direction={'row'}
+                            direction={'column'}
                        >
-
+                           <ButtonGroupUtil
+                               parentSetLogRun={(run_) => setLeftShow(run_)}
+                               parentSetGiftMsgRun={(run_) => setRightShow(run_)}
+                           />
                        {/*  监听窗口  */}
                            <ListenRooms />
-                           {/*<ButtonGroupUtil/>*/}
-
                        </Flex>
                    </Box>
                 </Flex>
@@ -237,12 +391,13 @@ export const Body = () => {
                     gap={"2"}
                     pb={"4px"}
                     direction={'row'}
-                    height={"80%"}
+                    height={"70%"}
                     width={"100%"}
                     justify={"center"}
                 >
-                    <LeftArea />
-                    <RightArea />
+                    <LeftArea show={leftShow} />
+                    <TableArea />
+                    <RightArea show={rightShow}/>
                 </Flex>
             </Flex>
 

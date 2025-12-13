@@ -13,10 +13,14 @@ class WsServiceHandler(object):
 
     async def init_rooms(self):
         """ 第一次链的时候, 开直播间 """
+        # 检查一下如果没有直播间, 就重新初始化
+        from .gift_service import GIFT_SERVICE
+        if not GIFT_SERVICE.check_room_ids:
+            self._inited = False
+
         if self._inited:
             return
         self._inited = True
-        from .gift_service import GIFT_SERVICE
 
         used = get_rooms()
 

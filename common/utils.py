@@ -19,13 +19,16 @@ def read_xlsx(file_name: str, *,
 
     # 读 房间名, 房间号
     return dict(zip(
-        df['房间号'],
-        df['房间名'],
+        [str(x) for x in df['房间号']],
+        [str(x) for x in df['房间名']],
     ))
 
 
-def get_rooms():
+def get_rooms(only_dict=False):
     room_dat = read_xlsx('resources/meta/统计.xlsx')
+    if only_dict:
+        return room_dat
+
     room_ids = list(room_dat.keys())
 
     max_room = 5

@@ -32,7 +32,7 @@ class CrawlOutputHandler(object):
             if line and line.startswith(ROOM_OUT_MSG_HEADER):
                 ret = GiftWsResult(
                     timestamp=WsResult.get_timestamp(),
-                    data=line,
+                    data=line.removeprefix(ROOM_OUT_MSG_HEADER),
                 )
             else:
                 ret = LogWsResult(
@@ -117,7 +117,7 @@ class GiftService(object):
         for room_id in room_ids.split(','):
             self.check_room_ids.remove(room_id)
         # 发消息
-        MESSAGE_CENTER.notify_room(room_ids=self.check_room_ids)
+        await MESSAGE_CENTER.notify_room(room_ids=self.check_room_ids)
 
         return ret
 

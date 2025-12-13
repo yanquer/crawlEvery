@@ -6,12 +6,16 @@ import datetime
 import json
 import logging
 import os
+from dataclasses import dataclass
+from typing import List
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 
 from GiftInfo.items import GiftInfoItem
+from common.base import SimpleModel
 from common.defines import ROOM_OUT_MSG_HEADER
+from common.utils import get_rooms
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -136,6 +140,20 @@ class JsonWriterPipeline:
 #         return item
 
 
+@dataclass
+class ShowTableRow(SimpleModel):
+    # 轮次
+    time_round: str
+    # 直播间号
+    room_id: str
+    # 名称
+    room_name: str
+    # 环游个数
+    word_count: int = None
+    # 环游合计
+    word_count_total: int = None
+
+
 class JsonWriterTimeRangePipeline:
     """ 按照轮次与直播间统计
 
@@ -182,7 +200,7 @@ class JsonWriterTimeRangePipeline:
     _last_time_round: str = None
     _count = 0
     def process_item(self, item: GiftInfoItem, spider):
-        _LOGGER.debug(f"process_item: {item}")
+        _LOGGER.debug(f"JsonWriterTimeRangePipeline process_item: {item}")
 
         if not item.gift_name in self._filter_gift_names:
             return item
@@ -203,7 +221,12 @@ class JsonWriterTimeRangePipeline:
                     f"{self._last_time_round}@@@{date_now}": self._time_range_data
                 }, ensure_ascii=False) + "\n"
                 f.write(line)
-                print(f'{ROOM_OUT_MSG_HEADER}{line}')
+                self._output_msg(
+                    data={
+                        f"{self._last_time_round}@@@{date_now}": self._time_range_data
+                    },
+                    date_now=date_now,
+                )
                 al_out = True
             self._time_range_data = {}
             self._last_time_round = item.time_round
@@ -249,9 +272,80 @@ class JsonWriterTimeRangePipeline:
 
         if self._last_time_round:
             if not al_out:
-                line = json.dumps({
-                    f"{self._last_time_round}@@@{date_now}": self._time_range_data
-                }, ensure_ascii=False) + "\n"
-                print(f'{ROOM_OUT_MSG_HEADER}{line}')
+                # line = json.dumps({
+                #     f"{self._last_time_round}@@@{date_now}": self._time_range_data
+                # }, ensure_ascii=False) + "\n"
+                self._output_msg(
+                    data={
+                        f"{self._last_time_round}@@@{date_now}": self._time_range_data
+                    },
+                    date_now=date_now,
+                )
 
         return item
+
+    _room_map: dict = get_rooms(only_dict=True)
+    def _output_msg(self, data: dict, *, date_now: str):
+        """
+
+        data={
+            f"{self._last_time_round}@@@{date_now}": self._time_range_data
+        }
+
+        :param data:
+        :param date_now:
+        :return:
+        """
+        # line = json.dumps(data, ensure_ascii=False) + "\n"
+        # print(f'{ROOM_OUT_MSG_HEADER}{line}')
+
+        if not data:
+            return
+
+        time_round_with_t_str = list(data.keys())[0]
+        time_round = time_round_with_t_str.split("@@@")[0]
+
+        ret: List[ShowTableRow] = []
+
+        cur_dat = data[time_round_with_t_str]
+        # 先拿合计
+        ret.append(ShowTableRow(
+            time_round=time_round,
+            room_id="合计",
+            room_name="所有直播间",
+            word_count_total=cur_dat['all_total']["带你环游"],
+        ))
+
+        # 再拿剩下的, 直播间
+        url_total = [x for x in list(cur_dat.keys()) if x.endswith("_total") and x!="all_total"]
+
+        for url_k in url_total:
+            url_k_dat = cur_dat[url_k]
+            url_ = url_k.split("_")[0]
+            room_id = os.path.basename(url_)
+            room_name = self._room_map.get(room_id) or room_id
+
+            ret.append(ShowTableRow(
+                time_round=time_round,
+                room_id=room_id,
+                room_name=room_name,
+                word_count=url_k_dat['带你环游'],
+                word_count_total=url_k_dat['带你环游'],
+            ))
+
+        # 输出
+        ret_dict = [x.get_dict() for x in ret]
+        line = json.dumps(ret_dict, ensure_ascii=False) + "\n"
+        print(f'{ROOM_OUT_MSG_HEADER}{line}')
+
+
+
+
+
+
+
+
+
+
+
+

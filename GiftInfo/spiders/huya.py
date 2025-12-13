@@ -62,6 +62,8 @@ class HuyaSpider(BasePlayWrightSpider):
         chat_room_msgs: SelectorList = page_response_lastest.css('#chat-room__list')
         msg_divs: SelectorList = chat_room_msgs.css('div[data-cmid]')
 
+        room_id = os.path.basename(url)
+
         _LOGGER.info(f'本次发现 {len(msg_divs)} 消息')
         date_str = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
         for one in msg_divs:
@@ -101,15 +103,17 @@ class HuyaSpider(BasePlayWrightSpider):
 
             elif send_msg := one.css(f'div.msg-normal > span.msg.J_msg'):
                 msg_text = send_msg.css('::text').get()
+                _LOGGER.info(f'{room_id} msg_text: {msg_text} ')
                 if msg_text and "下单了" in msg_text:
                     msg_list = msg_text.split(' ')
 
                     user_name = msg_list[0]
                     up_name = msg_list[2]
 
-                    gift_info = msg_list[4].split('×')[0]
+                    gift_info = msg_list[4].split('×')
                     # print(gift_info)
-                    up_namespan_gift_desc = gift_info[0]
+                    # up_namespan_gift_desc = gift_info[0]
+                    gift_name = gift_info[0]
                     gift_num = gift_info[1]
 
                     _LOGGER.info(f'{user_name} 下单 {gift_num} 个 {gift_info} 给 {up_name}')
@@ -118,7 +122,7 @@ class HuyaSpider(BasePlayWrightSpider):
                     yield GiftInfoItem(
                         user_name=user_name,
                         num=gift_num,
-                        gift_name=gift_info,
+                        gift_name=gift_name,
                         up_name=up_name,
                         action="下单",
                         room=url,
