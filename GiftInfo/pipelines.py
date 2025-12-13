@@ -2,12 +2,13 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+import copy
 import datetime
 import json
 import logging
 import os
 from dataclasses import dataclass
-from typing import List
+from typing import List, Tuple
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
@@ -206,6 +207,10 @@ class JsonWriterTimeRangePipeline:
     def process_item(self, item: GiftInfoItem, spider):
         _LOGGER.debug(f"JsonWriterTimeRangePipeline process_item: {item}")
 
+        date_now = datetime.datetime.now().strftime("%Y-%m-%d")
+        # 输出一次最近的, 这样前端才有数据
+        self._output_msg(data={}, date_now=date_now)
+
         if not item.gift_name in self._filter_gift_names:
             return item
         if not item.room:
@@ -213,7 +218,6 @@ class JsonWriterTimeRangePipeline:
         if not item.time_round:
             return item
 
-        date_now = datetime.datetime.now().strftime("%Y-%m-%d")
         al_out = False
         if (self._last_time_round is not None) and (
                 self._last_time_round != item.time_round
@@ -276,6 +280,7 @@ class JsonWriterTimeRangePipeline:
 
         if self._last_time_round:
             if not al_out:
+                al_out = True
                 # line = json.dumps({
                 #     f"{self._last_time_round}@@@{date_now}": self._time_range_data
                 # }, ensure_ascii=False) + "\n"
@@ -289,6 +294,7 @@ class JsonWriterTimeRangePipeline:
         return item
 
     _room_map: dict = get_rooms(only_dict=True)
+    _last_send_arg: Tuple[dict, str] = None
     def _output_msg(self, data: dict, *, date_now: str):
         """
 
@@ -304,7 +310,13 @@ class JsonWriterTimeRangePipeline:
         # print(f'{ROOM_OUT_MSG_HEADER}{line}')
 
         if not data:
-            return
+            # 记录一次最近的数据, 没有数据就说明需要使用最近的
+            if self._last_send_arg is None:
+                return
+            data, date_now = self._last_send_arg
+
+        # 缓存
+        self._last_send_arg = (copy.deepcopy(data), date_now)
 
         time_round_with_t_str = list(data.keys())[0]
         time_round = time_round_with_t_str.split("@@@")[0]

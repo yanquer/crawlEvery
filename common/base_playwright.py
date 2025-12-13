@@ -155,7 +155,7 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
     SAVE_DIR = "resources/gift"
     # 并发数
     CONCURRENT_REQUESTS = 25
-    HEADLESS = True # not IS_DEBUG_MODE
+    HEADLESS = not IS_DEBUG_MODE
     PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 10 * 60 * 1000,  # 10 min
 
     @staticmethod

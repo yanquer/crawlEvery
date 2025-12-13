@@ -221,8 +221,19 @@ class HuyaSpider(BasePlayWrightSpider):
             if open_win:
                 body_iframes: List[ElementHandle] = await page.query_selector_all('body iframe')
 
+                # 找到目标frame
+                target_iframe: ElementHandle = None
+                # 还是得遍历找, 不然后面会返回代理界面
+                # todo: 是不是要从后往前找
+                for i, one in enumerate(body_iframes):
+                    one_page_content = await one.content_frame()
+                    if one_page_content.url == 'https://y2261a742d6a43b3-ojhmr5vg.ext.huya.com/ext-web-sub-frame/0.2.8/index.html':
+                        target_iframe = one
+                        _LOGGER.debug(f'{url} 在第 {i} 个 frame 找到目标 frame')
+                        break
+
                 # 一般在最后一个
-                if target_iframe := body_iframes[-1]:
+                if target_iframe:
                     iframe_page_content = await target_iframe.content_frame()
                     t1 = await iframe_page_content.content()
 
