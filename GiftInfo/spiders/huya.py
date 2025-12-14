@@ -3,7 +3,7 @@ import datetime
 import logging
 import os
 import random
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from playwright.async_api import ElementHandle, Page
 from scrapy import Selector
@@ -54,7 +54,7 @@ class HuyaSpider(BasePlayWrightSpider):
         for one in self.start_urls:
             yield self._request_url_as_playwright(one, callback=self.parse, )
 
-    _already_find_msg_max_id = 0
+    _already_find_msg_max_id: Dict[str, int] = {}
 
     def _parse_msg(self,
                    url: str,
@@ -67,13 +67,19 @@ class HuyaSpider(BasePlayWrightSpider):
 
         _LOGGER.info(f'本次发现 {len(msg_divs)} 消息')
         date_str = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+
+        self._already_find_msg_max_id = self._already_find_msg_max_id or {}
+        if url not in self._already_find_msg_max_id:
+            self._already_find_msg_max_id[url] = 0
+        cur_url_max_id = self._already_find_msg_max_id[url] or 0
+
         for one in msg_divs:
             one: Selector
             msg_front_id = one.attrib['data-cmid']
 
-            if int(msg_front_id) <= self._already_find_msg_max_id:
+            if int(msg_front_id) <= cur_url_max_id:
                 continue
-            self._already_find_msg_max_id = max(int(msg_front_id), self._already_find_msg_max_id)
+            self._already_find_msg_max_id[url] = max(int(msg_front_id), self._already_find_msg_max_id[url])
 
             _LOGGER.info(f'开始解析 msg_front_id: {msg_front_id}')
 
@@ -345,7 +351,7 @@ class HuyaSpider(BasePlayWrightSpider):
                     ...
                     _LOGGER.info(f'刷新页面...')
                     current_time = 0
-                    self._already_find_msg_max_id = 0
+                    self._already_find_msg_max_id = {}
                     await page.close()
                     yield self._request_url_as_playwright(
                         url=url,
