@@ -237,18 +237,8 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
                     "--memory-pressure-off",
                     "--disable-cache",  # 可选，根据需求决定
 
-                    "--disable-dev-shm-usage",
-                    "--disable-setuid-sandbox",
-                    "--no-sandbox",
                     "--single-process",  # 单进程模式，减少内存
                     "--no-zygote",
-                    "--disable-gpu",
-                    "--disable-accelerated-2d-canvas",
-                    "--disable-webgl",
-                    "--disable-background-timer-throttling",
-                    "--disable-backgrounding-occluded-windows",
-                    "--disable-renderer-backgrounding",
-                    "--memory-pressure-off",
                     "--js-flags=--max-old-space-size=512",  # 限制JavaScript内存
                 ]
             },
