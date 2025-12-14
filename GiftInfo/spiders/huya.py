@@ -2,6 +2,7 @@ import asyncio
 import datetime
 import logging
 import os
+import random
 from typing import List, Optional
 
 from playwright.async_api import ElementHandle, Page
@@ -365,3 +366,5 @@ class HuyaSpider(BasePlayWrightSpider):
                 # await asyncio.sleep(1*60)
                 # 提高准确性, 半秒钟刷新一次
                 await page.wait_for_timeout(0.5 * 1 * 1000)
+                # if random.choice([True, False, False, False, False, False, False]):
+                #     await self.cleanup_page_memory(page=page)

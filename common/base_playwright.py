@@ -1,4 +1,5 @@
 import abc
+import gc
 import json
 import logging
 import os
@@ -24,7 +25,46 @@ LoggerEvery.add_rotating_log_handler(_LOGGER, CUSTOM_LOG, logging.DEBUG)
 class BasePlaywrightHelper(object):
     """ 主要定义一些辅助方法 """
 
-    async def exec_js(self, *, page: Page, js_str: str):
+    @classmethod
+    async def cleanup_page_memory(cls, page: Page):
+        """强制清理浏览器内存"""
+        try:
+            # 1. 执行JavaScript强制GC（如果页面支持）
+            if page and not page.is_closed():
+                await cls.exec_js(
+                    page=page,
+                    js_str="""
+                                                                                    () => {
+                                                                                        // 清除浏览器缓存
+                                                                                        if (window.performance && window.performance.clearResourceTimings) {
+                                                                                            window.performance.clearResourceTimings();
+                                                                                        }
+                                                                                        // 清除内存
+                                                                                        if (window.gc) {
+                                                                                            window.gc();
+                                                                                        }
+                                                                                        // 清除定时器
+                                                                                        const maxId = setTimeout(() => {}, 0);
+                                                                                        for (let i = 1; i < maxId; i++) {
+                                                                                            clearTimeout(i);
+                                                                                            clearInterval(i);
+                                                                                        }
+                                                                                        // 清除事件监听器（简化版）
+                                                                                        document.body.innerHTML = document.body.innerHTML;
+                                                                                    }
+                                                                                """
+                )
+
+            # 2. 清除浏览器缓存
+            if page:
+                await page._impl_obj._client.send('Network.clearBrowserCache')
+                # await page._impl_obj._client.send('Network.clearBrowserCookies')
+
+        except Exception as e:
+            _LOGGER.error(f"Clear memory error: {e}")
+
+    @classmethod
+    async def exec_js(cls, *, page: Page, js_str: str):
         try:
             await page.evaluate(js_str)
         except Exception as e:
@@ -34,7 +74,8 @@ class BasePlaywrightHelper(object):
     async def reload(cls, page: Page):
         await page.reload(timeout=0)
 
-    async def _move_mouse_to_css_center(self, response: Response, css_selector: str):
+    @classmethod
+    async def _move_mouse_to_css_center(cls, response: Response, css_selector: str):
         """ 将鼠标移动要元素正中心
 
             css_selector:
