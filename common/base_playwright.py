@@ -224,23 +224,23 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
                 # 'args': [
                 #     '--mute-audio',
                 # ],
-                "args": [
-                    "--disable-dev-shm-usage",
-                    "--disable-setuid-sandbox",
-                    "--no-sandbox",
-                    "--disable-gpu",
-                    "--disable-accelerated-2d-canvas",
-                    "--disable-webgl",
-                    "--disable-background-timer-throttling",
-                    "--disable-backgrounding-occluded-windows",
-                    "--disable-renderer-backgrounding",
-                    "--memory-pressure-off",
-                    "--disable-cache",  # 可选，根据需求决定
-
-                    "--single-process",  # 单进程模式，减少内存
-                    "--no-zygote",
-                    "--js-flags=--max-old-space-size=512",  # 限制JavaScript内存
-                ]
+                # "args": [
+                #     # "--disable-dev-shm-usage",
+                #     "--disable-setuid-sandbox",
+                #     "--no-sandbox",
+                #     "--disable-gpu",
+                #     "--disable-accelerated-2d-canvas",
+                #     "--disable-webgl",
+                #     "--disable-background-timer-throttling",
+                #     "--disable-backgrounding-occluded-windows",
+                #     "--disable-renderer-backgrounding",
+                #     "--memory-pressure-off",
+                #     "--disable-cache",  # 可选，根据需求决定
+                #
+                #     "--single-process",  # 单进程模式，减少内存
+                #     "--no-zygote",
+                #     "--js-flags=--max-old-space-size=512",  # 限制JavaScript内存
+                # ]
             },
             PLAYWRIGHT_CONTEXT_KWARGS={
                 'ignore_https_errors': True,
