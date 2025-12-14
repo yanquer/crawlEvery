@@ -338,7 +338,25 @@ class HuyaSpider(BasePlayWrightSpider):
             await page.wait_for_load_state('domcontentloaded', timeout=0)
             _LOGGER.debug(f'页面 {url} 加载完成')
 
+            current_time = 0
+            max_times = 50
             while 1:
+                if current_time > max_times:
+                    ...
+                    _LOGGER.info(f'刷新页面...')
+                    current_time = 0
+                    self._already_find_msg_max_id = 0
+                    await page.close()
+                    yield self._request_url_as_playwright(
+                        url=url,
+                        callback=self.parse,
+                    )
+                    return
+                    # await page.reload(timeout=0)
+                    # await response.meta["playwright_context"].browser.close()
+                    # await page.wait_for_load_state('domcontentloaded', timeout=0)
+
+                current_time += 1
 
                 # 把视频页面关掉, 看看能不能降低一点流量与占用
                 await page.evaluate("document.querySelectorAll('#videoContainer > .player-wrap').forEach(e => e.remove())")

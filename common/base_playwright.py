@@ -224,10 +224,38 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
                 # 'args': [
                 #     '--mute-audio',
                 # ],
+                "args": [
+                    "--disable-dev-shm-usage",
+                    "--disable-setuid-sandbox",
+                    "--no-sandbox",
+                    "--disable-gpu",
+                    "--disable-accelerated-2d-canvas",
+                    "--disable-webgl",
+                    "--disable-background-timer-throttling",
+                    "--disable-backgrounding-occluded-windows",
+                    "--disable-renderer-backgrounding",
+                    "--memory-pressure-off",
+                    "--disable-cache",  # 可选，根据需求决定
+
+                    "--disable-dev-shm-usage",
+                    "--disable-setuid-sandbox",
+                    "--no-sandbox",
+                    "--single-process",  # 单进程模式，减少内存
+                    "--no-zygote",
+                    "--disable-gpu",
+                    "--disable-accelerated-2d-canvas",
+                    "--disable-webgl",
+                    "--disable-background-timer-throttling",
+                    "--disable-backgrounding-occluded-windows",
+                    "--disable-renderer-backgrounding",
+                    "--memory-pressure-off",
+                    "--js-flags=--max-old-space-size=512",  # 限制JavaScript内存
+                ]
             },
             PLAYWRIGHT_CONTEXT_KWARGS={
                 'ignore_https_errors': True,
             },
+            # PLAYWRIGHT_ABORT_REQUEST=lambda req: req.resource_type in ("image", "stylesheet", "font", "media"),
             PLAYWRIGHT_PAGE_METHODS={
                 # 静音
                 PageMethod('wait_for_load_state', 'domcontentloaded'),
@@ -380,6 +408,8 @@ class BasePlayWrightSpider(scrapy.Spider, BasePlaywrightHelper, abc.ABC):
                     # 加载保存的状态
                     'storage_state': self.context_file if os.path.exists(self.context_file) else None,
                 },
+                # # 不过滤此请求, 不然没法刷新浏览器
+                # 'dont_filter': True,
             },
             cb_kwargs=callback_kwargs,
             errback=self.error_handler_from_start_requests if from_where==1 else self.error_handler_from_parse,
