@@ -15,7 +15,9 @@ from itemadapter import ItemAdapter
 
 from GiftInfo.items import GiftInfoItem
 from common.base import SimpleModel
+from common.common_util.components.async_.http_ import async_http_post
 from common.defines import ROOM_OUT_MSG_HEADER, IS_DEBUG_MODE
+from common.huya_server import HU_YA_SERVER
 from common.utils import get_rooms
 
 _LOGGER = logging.getLogger(__name__)
@@ -38,6 +40,7 @@ class JsonWriterPipeline:
         self._file.close()
 
     _count = 0
+
     def process_item(self, item, spider):
         _LOGGER.debug(f"process_item: {item}")
         # ensure_ascii=False , 中文正常解码
@@ -199,13 +202,21 @@ class JsonWriterTimeRangePipeline:
         # self._file.close()
         ...
 
+    @classmethod
+    async def _upload_item(cls, item: GiftInfoItem):
+        """ 上传到服务器 """
+        return await HU_YA_SERVER.upload_item(item)
+
     _filter_gift_names = {
         '带你环游', '心动鸭'
     }
     _last_time_round: str = None
     _count = 0
-    def process_item(self, item: GiftInfoItem, spider):
+
+    async def process_item(self, item: GiftInfoItem, spider):
         _LOGGER.debug(f"JsonWriterTimeRangePipeline process_item: {item}")
+
+        await self._upload_item(item)
 
         date_now = datetime.datetime.now().strftime("%Y-%m-%d")
         # 输出一次最近的, 这样前端才有数据
@@ -295,6 +306,7 @@ class JsonWriterTimeRangePipeline:
 
     _room_map: dict = get_rooms(only_dict=True)
     _last_send_arg: Tuple[dict, str] = None
+
     def _output_msg(self, data: dict, *, date_now: str):
         """
 
@@ -334,7 +346,7 @@ class JsonWriterTimeRangePipeline:
         ))
 
         # 再拿剩下的, 直播间
-        url_total = [x for x in list(cur_dat.keys()) if x.endswith("_total") and x!="all_total"]
+        url_total = [x for x in list(cur_dat.keys()) if x.endswith("_total") and x != "all_total"]
 
         for url_k in url_total:
             url_k_dat = cur_dat[url_k]
@@ -359,15 +371,3 @@ class JsonWriterTimeRangePipeline:
         # todo: 服务器上抓不到 print, 临时方案
         if not IS_DEBUG_MODE:
             _LOGGER.warning(f'{ROOM_OUT_MSG_HEADER}{line}')
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,0 +1,3 @@
+[submodule "common/common_util"]
+	path = common/common_util
+	url = git@gitlab.testbird.tech:rich_dev/common_util.git
