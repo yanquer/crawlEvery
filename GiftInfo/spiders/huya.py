@@ -3,7 +3,7 @@ import datetime
 import logging
 import os
 import random
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Tuple
 
 from playwright.async_api import ElementHandle, Page
 from scrapy import Selector
@@ -14,6 +14,7 @@ from GiftInfo import CHECK_ROOMS
 from GiftInfo.items import GiftInfoItem
 from common.base_playwright import BasePlayWrightSpider
 from common.defines import IS_DEBUG_MODE
+from common.huya_server import HU_YA_SERVER
 from common.js_helper import JS_MUTE
 from common.utils import get_rooms
 
@@ -41,6 +42,9 @@ class HuyaSpider(BasePlayWrightSpider):
 
     def start_requests(self):
 
+        self.room_ids = list((HU_YA_SERVER.get_need_handle_room()).keys())[
+                        :int(os.environ.get('S_HY_MAX_TASKS', 3))
+                        ]
         _LOGGER.info(f'需要检查的房间 {self.room_ids}')
 
         self.start_urls = [
@@ -165,12 +169,10 @@ class HuyaSpider(BasePlayWrightSpider):
                                      url: str,
                                      page_response_lastest: HtmlResponse,
                                      response: Response,
-                                     ) -> Optional[str]:
+                                     ) -> Tuple[Optional[str], Optional[int]]:
         """ 解析 带你环游游戏,
-            返回是否在轮次
 
-            如果在轮次, 以时间命名轮次,
-            如果不在轮次, 返回 None
+            返回识别到 倒计时 时候的时间, 与倒计时秒数
         """
         room_ = os.path.basename(url)
         _LOGGER.info(f'{room_} 准备自动化打开带你环游窗口')
@@ -199,6 +201,7 @@ class HuyaSpider(BasePlayWrightSpider):
         text = ""
 
         idx_ = 0
+        _cur_time_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         while 1:
             idx_ += 1
             # todo: 后续优化下判断, 不重复打开
@@ -269,6 +272,7 @@ class HuyaSpider(BasePlayWrightSpider):
                                 text += (await one.text_content() or "").strip()
 
                         if text:
+                            _cur_time_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                             break
 
             if (not text):
@@ -287,19 +291,19 @@ class HuyaSpider(BasePlayWrightSpider):
             time_str = text.replace('后出发', '')
             time_int = self.get_time_seconds_by_str(time_str)
 
-            if self._last_round is None:
-                self._last_round = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                self._last_time = time_int
-            else:
-                # 如果有轮次, 判断下是否是新的一轮
-                if time_int <= self._last_time:
-                    ...
-                else:
-                    # 新一轮
-                    self._last_round = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                self._last_time = time_int
-                return self._last_round
-        return None
+            # if self._last_round is None:
+            #     self._last_round = _cur_time_str
+            #     self._last_time = time_int
+            # else:
+            #     # 如果有轮次, 判断下是否是新的一轮
+            #     if time_int <= self._last_time:
+            #         ...
+            #     else:
+            #         # 新一轮
+            #         self._last_round = _cur_time_str
+            #     self._last_time = time_int
+            return _cur_time_str, time_int
+        return _cur_time_str, 0
 
     async def _wait_for_login_by_text(self,
                                       response: Response,
@@ -365,7 +369,8 @@ class HuyaSpider(BasePlayWrightSpider):
                 current_time += 1
 
                 # 把视频页面关掉, 看看能不能降低一点流量与占用
-                await page.evaluate("document.querySelectorAll('#videoContainer > .player-wrap').forEach(e => e.remove())")
+                await page.evaluate(
+                    "document.querySelectorAll('#videoContainer > .player-wrap').forEach(e => e.remove())")
 
                 # todo: 放到 docker 里了 暂时取消主动登录
                 #   如果需要登陆, 改成手动登了, 提交代码上去
@@ -376,14 +381,18 @@ class HuyaSpider(BasePlayWrightSpider):
                 await self.exec_js(page=page, js_str=JS_MUTE)
 
                 # 时间轮次
-                current_time_round = await self._parse_current_go_word(url=url,
-                                                                       page_response_lastest=page_response_lastest,
-                                                                       response=response)
+                current_time_str, end_time_int = await self._parse_current_go_word(url=url,
+                                                                                   page_response_lastest=page_response_lastest,
+                                                                                   response=response)
 
                 for msg_ret in self._parse_msg(url=url, page_response_lastest=page_response_lastest):
                     msg_ret: Optional[GiftInfoItem]
                     if msg_ret:
-                        msg_ret['time_round'] = current_time_round
+                        # msg_ret['time_round'] = current_time_round
+                        # todo: 倒计时解析与礼物时间可能有差距
+                        # msg_ret['countdown'] = current_time_str
+                        msg_ret['time'] = current_time_str
+                        msg_ret['time_second_to_end'] = end_time_int
                         yield msg_ret
 
                 # 一分钟刷新一次, 如果消息多, 需要更短间隔时间

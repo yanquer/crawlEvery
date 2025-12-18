@@ -2,6 +2,8 @@
 import logging
 from typing import Dict
 
+import requests
+
 from common.common_util.components.async_.http_ import async_http_post, async_http_get
 
 _LOGGER = logging.getLogger(__name__)
@@ -13,7 +15,7 @@ class HuYaServer(object):
     room_url = 'https://hy.wepxtop.online/v1/live/'
 
     @classmethod
-    async def get_need_handle_room(cls) -> Dict[str, str]:
+    async def get_need_handle_room_a(cls) -> Dict[str, str]:
         """ 获取需要爬的直播间 """
         async with async_http_get(
                 url=cls.room_url,
@@ -28,6 +30,26 @@ class HuYaServer(object):
                     _LOGGER.info(f'获取需要爬的直播间失败, {text_}')
             else:
                 _LOGGER.error(f'获取需要爬的直播间失败, 请检查, ')
+
+        return {}
+
+    @classmethod
+    def get_need_handle_room(cls) -> Dict[str, str]:
+        """ 同步 获取需要爬的直播间 """
+        resp = requests.get(
+            url=cls.room_url,
+            verify=False,
+        )
+
+        if resp:
+            if resp.status_code == 204:
+                _LOGGER.info(f'获取需要爬的直播间成功')
+                return resp.json()
+            else:
+                text_ = resp.text
+                _LOGGER.info(f'获取需要爬的直播间失败, {text_}')
+        else:
+            _LOGGER.error(f'获取需要爬的直播间失败, 请检查, ')
 
         return {}
 
@@ -47,7 +69,7 @@ class HuYaServer(object):
                     room=item.room,
                     time=item.time,
                     time_second_to_end=item.time_second_to_end,
-                    time_round=item.time_round,
+                    # time_round=item.time_round,
                 )
         ) as resp:
             if resp:
