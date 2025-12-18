@@ -45,6 +45,7 @@ class HuyaSpider(BasePlayWrightSpider):
         self.room_ids = list((HU_YA_SERVER.get_need_handle_room()).keys())[
                         :int(os.environ.get('S_HY_MAX_TASKS', 3))
                         ]
+        # self.room_ids = ['13168']
         _LOGGER.info(f'需要检查的房间 {self.room_ids}')
 
         self.start_urls = [

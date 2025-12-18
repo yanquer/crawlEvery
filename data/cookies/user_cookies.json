@@ -1,40 +1,30 @@
 [
   {
     "name": "__yamid_new",
-    "value": "CB7616A003900001C6451BD4157011B7",
+    "value": "CB79A7269BF00001806891C014331B40",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1799669342,
+    "expires": 1800626194,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "game_did",
-    "value": "24KuLoE0dYgcGfRORYbOMFTlMvRvu95abY8",
+    "value": "7VYTHTIdRkgK8DxhQT98-iQYiRL20FHHKQu",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1799669342,
+    "expires": 1800626195,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "_qimei_uuid42",
-    "value": "19c0714090310033994de7dafad9e74f4953cfb5cc",
+    "value": "19c121538231009531e19ce1eeb4513db1ebb07217",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796645343,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "_qimei_fingerprint",
-    "value": "4f281eb0fcc6fda2d51d307cfcf7f2ad",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1796645343,
+    "expires": 1797602195,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -44,7 +34,7 @@
     "value": "0.50",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796914408,
+    "expires": 1797602274,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -54,7 +44,7 @@
     "value": "0.80",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796914408,
+    "expires": 1797602274,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -64,24 +54,64 @@
     "value": "true",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1796914408,
+    "expires": 1797602274,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "udb_guiddata",
+    "value": "ef58c78245084240b777520d4fbe393e",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1797602195,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "guid",
-    "value": "0a899597606e35693801a530a63023ba",
+    "value": "0a89ee5b130844693d0189398a39ead1",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1767970408,
+    "expires": 1768658274,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "_qimei_fingerprint",
+    "value": "4f281eb0fcc6fda2d51d307cfcf7f2ad",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1797602195,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "_qimei_h38",
+    "value": "d367ea4e31e19ce1eeb4513d09000001119c12",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1797602273,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "udb_deviceid",
+    "value": "w_1054155245664518144",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1766671067,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "__yasmid",
-    "value": "0.4746702773204581",
+    "value": "0.31698797576951676",
     "domain": ".huya.com",
     "path": "/",
     "expires": -1,
@@ -91,17 +121,17 @@
   },
   {
     "name": "__yamid_tt1",
-    "value": "0.4746702773204581",
+    "value": "0.31698797576951676",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1799669344,
+    "expires": 1800626195,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "_yasids",
-    "value": "__rootsid%3DCB7616A971D00001B7D314CC1F8A1CA7",
+    "value": "__rootsid%3DCB79A73A25C0000131EF7A403080162D",
     "domain": ".huya.com",
     "path": "/",
     "expires": -1,
@@ -111,7 +141,107 @@
   },
   {
     "name": "rep_cnt",
-    "value": "83",
+    "value": "18",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "udb_anobiztoken",
+    "value": "AQArQJyJYX_BV0Qc7TeGLHXidO4V9IADubik7cjxMWWOHh5JPkDE16NnpmqhWwKzTvOaSoeDZzvrBGJ3MzD_Loe7vtifT-RI7ySfu8RpOc34jYaV0lEeajA29UFZd6k2Dv_FAl19Gd9kLyz0pp9cTAw4ysDRjoE24EZuGQNKY1wMkG4nRPmoB2Be2dQ4lE1Bh9Xc9_rJVs5oLHus3pj0Ev31XtF60BN3qZXIDf6ukS9-5ZmQArfiFiT3M8GPqlgzDoUNmPxdasEbvaAm619PSYHbMfPy5U5JQW3N9c3SjEabv9Txe1myTSM-v5LXJ0nO7eE_cxEy0oxCrq2Me5pJ2NwB",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1766670996,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "udb_anouid",
+    "value": "1470552045411",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1766670996,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "sdid",
+    "value": "0UnHUgv0_qmfD4KAKlwzhqWqy1ZqGN5xJwtprgLc3j8L69KIgAy66iAy5WAb4FWgWuS3yiDTOuB58a8BRq3f_2FuGMGl2hM6_h48EezxiJGLWVkn9LtfFJw_Qo4kgKr8OZHDqNnuwg612sGyflFn1dvPvW4vmNbsv1f8fv-dTXcAMHAnT1EvvUlIaqcdD8eWz",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1766671002,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "hdid",
+    "value": "d9bd4b0dbf2ff9346a4f3069ad733b1714689810",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1766671002,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "huya_hd_rep_cnt",
+    "value": "6",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "huya_web_rep_cnt",
+    "value": "157",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "huya_flash_rep_cnt",
+    "value": "68",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "Hm_lvt_51700b6c722f5bb4cf39906a596ea41f",
+    "value": "1766066198",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": 1797602275,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "Hm_lpvt_51700b6c722f5bb4cf39906a596ea41f",
+    "value": "1766066275",
+    "domain": ".huya.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "HMACCOUNT",
+    "value": "73928E4DA7297B07",
     "domain": ".huya.com",
     "path": "/",
     "expires": -1,
@@ -130,161 +260,31 @@
     "sameSite": "None"
   },
   {
-    "name": "_qimei_h38",
-    "value": "d367ea4e994de7dafad9e74f09000008819c07",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1796914408,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "udb_guiddata",
-    "value": "fc79b549c01c4738af63a1ebf522ee13",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1796645346,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "Hm_lvt_51700b6c722f5bb4cf39906a596ea41f",
-    "value": "1765109347",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1796914410,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "Hm_lpvt_51700b6c722f5bb4cf39906a596ea41f",
-    "value": "1765378410",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": -1,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "HMACCOUNT",
-    "value": "AE5225C718453452",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": -1,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "huya_web_rep_cnt",
-    "value": "1334",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": -1,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "sdid",
-    "value": "0UnHUgv0_qmfD4KAKlwzhqYh4OwYO3F03RwBCqS0pSBgsGeWG1x1v2xTc58YL1Vi1ZOjlGLU4iWqo4WgQh3Xi-ivDJuyIEm_jtbAdcT09KojWVkn9LtfFJw_Qo4kgKr8OZHDqNnuwg612sGyflFn1dpHkirAgY17hv7kyJS3vb_vzDQGUw17xVjPPHGi2f7oo",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1765983211,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "udb_deviceid",
-    "value": "w_1050141934365564928",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1765714164,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "huya_flash_rep_cnt",
-    "value": "418",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": -1,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "udb_anobiztoken",
-    "value": "AQCSj04F7UdK6lBN91epLZHoUNI5wuwA0fBTDgu99udmMQvEZlAAArNPAnW1PRmh3-L09zX3HyxIhnL7cUro_Rwnxhmqepiqqb4UdcirVe7DcglFFPe2u6gSxCtKQoKHrdr6nW8otfkmc2RKWUzi0WDJFUmh7w3DXJg3IWQs6Fk92NOrMzzP1P2cW1T6wIvSATHmvnytwcorCeJubDSQtt9hZB9pe8vSt3dZ_uF-BNBaivpF35fY-4uFKmsuwdIzQzbt3O0r2uUfSNRwr09tQrBnqMsh5ZQHAK5A71lN95dsm7hDMdVZ-b2rmlpT-CTKEIZ4je2CFzM6_nX5m2tHioD4",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1765714150,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "udb_anouid",
-    "value": "1470521680519",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1765714150,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "hdid",
-    "value": "91694e161cf863a9001842d1c93ef53714866315",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": 1765983211,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "huya_hd_rep_cnt",
-    "value": "230",
-    "domain": ".huya.com",
-    "path": "/",
-    "expires": -1,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
     "name": "udb_appid",
     "value": "5002",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714164,
+    "expires": 1766671067,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "udb_biztoken",
-    "value": "AQAP5FM0C_WzSuYlsdyRin-EreQwMjXmlqujL9_DyDyk_NenEKhx_LCM7-vX2uzwyhXM02mys45n_dyjBF8J3iXzfdYidD8xw1wiAOBshiJJvlAAHKUYjvU6lJSzsPnqaBlrSWazNycqMW191bTySRzPbRJpJYpEWeKqir1TwPzN1yM35qjW4fiRAZgxxu-tbCGkLqZE3uao0imHP9BgNw5G2HysSuGaI2rFxYV1n7n1PR_ZeSIF9SxZZ04R_8pevvd_a61fQjfgUx23DS-fbUQgnuIpecjmKwTjiKKsoPHX5JBH-Myou9xzr-Bxz3RebJSlbLubSNUoVlwJ-gEg3siK",
+    "value": "AQATEP65Go-z1edBMY6-yFKzOZLlj2UHLE7E81p8Y5WSsfig8N15AhJkeDoPCcQuxUyi7q-dXhn94YfabyqWEXlgh0rLXjs9ufBhSBzi5_0Dt8StRnFi0yVY8GIpGzHMA-nwTEDf6CzCHIexChKNutOjjo-mV6maQPATYpeQu9Kq5w312W31x1dnTx91YoNN4fcOkNJ8X_qQDw8CZ5BLIsoKmmXqQYJJ73mDOBtQD9GNKljaPY8N9I37MGLUTmakFu58AdqJaKEXmsn80wi_r0SjR5l1s0zTU858n5TksT17mlCZBkLJvbkdX0m6nlYI4GbHx1sRGcmEaB9BMTRdQaTf",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": true,
     "sameSite": "None"
   },
   {
     "name": "udb_cred",
-    "value": "CjB5wYjZQay2zMTdqVQaTSdQwEOFX-Dqpl5jjtuZwsMwkP0GU3_lOOILofbkA8yiwLvhI01OOTuUU75lYrEWm1o1I-2lAyi1Y_ZX6FwDoy-Ta3VcZEuftFIrfL5rW0GepNkc0NP4noizS1F0bECWPRw6",
+    "value": "CkCMxSyj8sL9VWhBw3HfAT0T13VLS9bIdetyGUjPjpaG-dpE51dtdIzMHgMyU3l6_L946QXuFRZAp4aHjhjfZeUF2Eup0sTGAUUjBGgQdkJO3prX_qq_KWUV4Jp5SP91onoxrtXzGXHoyhBhfRU541Od",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": true,
     "sameSite": "None"
@@ -294,17 +294,17 @@
     "value": "6",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "udb_other",
-    "value": "%7B%22lt%22%3A%221765109376928%22%2C%22isRem%22%3A%221%22%7D",
+    "value": "%7B%22lt%22%3A%221766066273375%22%2C%22isRem%22%3A%221%22%7D",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -314,7 +314,7 @@
     "value": "hy_164298217",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -324,7 +324,7 @@
     "value": "1",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -334,7 +334,7 @@
     "value": "1299519278440",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -344,7 +344,7 @@
     "value": "1.0",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": true,
     "sameSite": "None"
@@ -354,7 +354,7 @@
     "value": "hy_164298217",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -364,7 +364,7 @@
     "value": "1299519278440",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765714176,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -374,17 +374,17 @@
     "value": "13212790456",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1767701376,
+    "expires": 1768658273,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "h_unt",
-    "value": "1765378408",
+    "value": "1766066273",
     "domain": ".huya.com",
     "path": "/",
-    "expires": 1765983208,
+    "expires": 1766671073,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -401,50 +401,20 @@
   },
   {
     "name": "guid",
-    "value": "0a899597606e35693801a530a63023ba",
+    "value": "0a89ee5b130844693d0189398a39ead1",
     "domain": "zt.huya.com",
     "path": "/",
-    "expires": 1796914417,
+    "expires": 1797602275,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "huya_ua",
-    "value": "webh5&0.0.1&websocket&&diyh5_46821",
+    "value": "webh5&0.0.1&websocket&&diyh5_49445",
     "domain": "zt.huya.com",
-    "path": "/2a87c7bb/mobile",
-    "expires": 1796651493,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "huya_ua",
-    "value": "webh5&0.0.1&websocket&&diyh5_46575",
-    "domain": "zt.huya.com",
-    "path": "/3a9960b1/mobile",
-    "expires": 1796914416,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "huya_ua",
-    "value": "webh5&0.1.0&websocket&&diyh5_48461",
-    "domain": "zt.huya.com",
-    "path": "/431ab748/mobile",
-    "expires": 1796645785,
-    "httpOnly": false,
-    "secure": false,
-    "sameSite": "None"
-  },
-  {
-    "name": "huya_ua",
-    "value": "webh5&0.1.0&websocket&&diyh5_49071",
-    "domain": "zt.huya.com",
-    "path": "/ef2b942b/mobile",
-    "expires": 1796646501,
+    "path": "/4af56c43/mobile",
+    "expires": 1797602274,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
@@ -454,24 +424,24 @@
     "value": "webh5&0.1.0&websocket&&h5_/13168",
     "domain": "www.huya.com",
     "path": "/",
-    "expires": 1796914408,
+    "expires": 1797602275,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "guid",
-    "value": "0a899597606e35693801a530a63023ba",
+    "value": "0a89ee5b130844693d0189398a39ead1",
     "domain": "www.huya.com",
     "path": "/",
-    "expires": 1796914416,
+    "expires": 1797602275,
     "httpOnly": false,
     "secure": false,
     "sameSite": "None"
   },
   {
     "name": "PHPSESSID",
-    "value": "c7vcvdqikb2i0mvs1fmseu8hm3",
+    "value": "jcl45oaap5kcckc5uuidro0pa1",
     "domain": "l.huya.com",
     "path": "/",
     "expires": -1,
@@ -481,7 +451,7 @@
   },
   {
     "name": "PHPSESSID",
-    "value": "9666p3acin98tpoid3j8qcmgq6",
+    "value": "8mitdf93acb5mrlovfk527b924",
     "domain": "l.web.huya.com",
     "path": "/",
     "expires": -1,
