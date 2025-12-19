@@ -42,7 +42,7 @@ class HuYaServer(object):
         )
 
         if resp:
-            if resp.status_code == 204:
+            if resp.status_code == 200:
                 _LOGGER.info(f'获取需要爬的直播间成功')
                 return resp.json()
             else:
