@@ -32,10 +32,13 @@ async def main():
             stderr=asyncio.subprocess.PIPE,
             env=os.environ,
         )
-        asyncio.create_task(_handle_output(process.stdout, 'stdout'))
-        asyncio.create_task(_handle_output(process.stderr, 'stderr'))
+        tasks = [
+            asyncio.create_task(_handle_output(process.stdout, 'stdout')),
+            asyncio.create_task(_handle_output(process.stderr, 'stderr')),
+            ]
         await asyncio.sleep(30 * 60)
         process.kill()
+        [x.cancel() for x in tasks]
 
 
 if __name__ == '__main__':

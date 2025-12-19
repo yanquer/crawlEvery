@@ -43,7 +43,7 @@ RUN . .venv/bin/activate && playwright install
 
 COPY . .
 
-CMD [".venv/bin/python", "main_server.py"]
+CMD [".venv/bin/python", "main_every.py"]
 
 
 
