@@ -33,7 +33,7 @@ class HuyaSpider(BasePlayWrightSpider):
     # ]
     room_ids = CHECK_ROOMS if not IS_DEBUG_MODE else ([] + get_rooms())
 
-    CONCURRENT_REQUESTS = len(room_ids)
+    CONCURRENT_REQUESTS = 80
     _REUSE_PAGE = True
 
     _sep = asyncio.Semaphore(CONCURRENT_REQUESTS)

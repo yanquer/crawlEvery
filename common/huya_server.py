@@ -22,7 +22,7 @@ class HuYaServer(object):
                 without_ssl=True,
         ) as resp:
             if resp:
-                if resp.status == 204:
+                if resp.status == 200:
                     _LOGGER.info(f'获取需要爬的直播间成功')
                     return await resp.json()
                 else:
