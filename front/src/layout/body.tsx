@@ -4,6 +4,7 @@ import {type ReactNode, useEffect, useState} from "react";
 import {WsClient} from "../common/ws_/simple-ws-client";
 import {WS_URL} from "../common/defines.ts";
 import type {GiftShowTableRow} from "../common/ws_/base.ts";
+import {asyncSleep} from "../common/base.ts";
 
 
 export const LeftArea = ({
@@ -219,25 +220,37 @@ export const TableArea = ({
 
     useEffect(() => {
 
-        WsClient.shared?.subscribe(subEvent, async (data) => {
-            // console.log(data);
-            if (data){
-                let text: string = data.data
+        let cancelCall: any = undefined
+        const call_ = async () => {
 
-                let tableRows: GiftShowTableRow[] = []
-
-                try {
-                    tableRows = JSON.parse(text)
-                } catch (e) {
-                    console.error(e)
-                }
-
-                if (tableRows && tableRows.length > 0){
-                    setTableData(tableRows)
-                }
-
+            while (!WsClient.shared){
+                await asyncSleep(1000)
             }
-        }).then()
+
+            cancelCall = await WsClient.shared?.subscribe(subEvent, async (data) => {
+                // console.log(data);
+                if (data){
+                    let text: string = data.data
+
+                    let tableRows: GiftShowTableRow[] = []
+
+                    try {
+                        tableRows = JSON.parse(text)
+                    } catch (e) {
+                        console.error(e)
+                    }
+
+                    if (tableRows && tableRows.length > 0){
+                        setTableData(tableRows)
+                    }
+
+                }
+            })
+        }
+
+        call_().then()
+
+        return () => cancelCall?.()
 
     }, [])
 
