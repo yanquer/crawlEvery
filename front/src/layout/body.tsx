@@ -224,7 +224,7 @@ export const TableArea = ({
         const call_ = async () => {
 
             while (!WsClient.shared){
-                await asyncSleep(1000)
+                await asyncSleep(100)
             }
 
             cancelCall = await WsClient.shared?.subscribe(subEvent, async (data) => {
@@ -268,62 +268,67 @@ export const TableArea = ({
                 {areaTitle}
             </Heading>
 
-            <Table.Root variant="surface">
-                <Table.Header>
-                    <Table.Row>
-                        <Table.ColumnHeaderCell>轮次</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>直播间号</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>直播间名称</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮环游个数</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮环游数合计</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>上轮环游个数</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>上轮环游数合计</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>环游数增加</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮心动鸭个数</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮心动鸭合计</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮环游 - 心动鸭</Table.ColumnHeaderCell>
-                    </Table.Row>
-                </Table.Header>
+            <ScrollArea type="always" scrollbars="vertical" style={{ height: '100%' }}>
 
-                <Table.Body>
+                <Table.Root variant="surface">
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.ColumnHeaderCell>轮次/时间</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>直播间号</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>直播间名称</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>本轮环游个数</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>本轮环游数合计</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>上轮环游个数</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>上轮环游数合计</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>环游数增加</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>本轮心动鸭个数</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>本轮心动鸭合计</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>本轮环游 - 心动鸭</Table.ColumnHeaderCell>
+                        </Table.Row>
+                    </Table.Header>
 
-                    {
-                        tableData.map((row, index) => (
-                            <Table.Row key={index}>
-                                <Table.RowHeaderCell>{row.time_round}</Table.RowHeaderCell>
-                                <Table.Cell>{row.room_id}</Table.Cell>
-                                <Table.Cell>{row.room_name}</Table.Cell>
-                                <Table.Cell>{row.word_count}</Table.Cell>
-                                <Table.Cell>{row.word_count_total}</Table.Cell>
-                                <Table.Cell>{row.last_word_count}</Table.Cell>
-                                <Table.Cell>{row.last_word_count_total}</Table.Cell>
-                                <Table.Cell>{row.word_count_sub}</Table.Cell>
-                                <Table.Cell>{row.duck_count}</Table.Cell>
-                                <Table.Cell>{row.duck_count_total}</Table.Cell>
-                                <Table.Cell>{row.world_sub_duck}</Table.Cell>
-                            </Table.Row>
-                        ))
-                    }
+                    <Table.Body>
 
-                    {/*<Table.Row>*/}
-                    {/*    <Table.RowHeaderCell>Danilo Sousa</Table.RowHeaderCell>*/}
-                    {/*    <Table.Cell>danilo@example.com</Table.Cell>*/}
-                    {/*    <Table.Cell>Developer</Table.Cell>*/}
-                    {/*</Table.Row>*/}
+                        {
+                            tableData.map((row, index) => (
+                                <Table.Row key={index}>
+                                    <Table.RowHeaderCell>{row.time_round}</Table.RowHeaderCell>
+                                    <Table.Cell>{row.room_id}</Table.Cell>
+                                    <Table.Cell>{row.room_name}</Table.Cell>
+                                    <Table.Cell>{row.word_count}</Table.Cell>
+                                    <Table.Cell>{row.word_count_total}</Table.Cell>
+                                    <Table.Cell>{row.last_word_count}</Table.Cell>
+                                    <Table.Cell>{row.last_word_count_total}</Table.Cell>
+                                    <Table.Cell>{row.word_count_sub}</Table.Cell>
+                                    <Table.Cell>{row.duck_count}</Table.Cell>
+                                    <Table.Cell>{row.duck_count_total}</Table.Cell>
+                                    <Table.Cell>{row.world_sub_duck}</Table.Cell>
+                                </Table.Row>
+                            ))
+                        }
 
-                    {/*<Table.Row>*/}
-                    {/*    <Table.RowHeaderCell>Zahra Ambessa</Table.RowHeaderCell>*/}
-                    {/*    <Table.Cell>zahra@example.com</Table.Cell>*/}
-                    {/*    <Table.Cell>Admin</Table.Cell>*/}
-                    {/*</Table.Row>*/}
+                        {/*<Table.Row>*/}
+                        {/*    <Table.RowHeaderCell>Danilo Sousa</Table.RowHeaderCell>*/}
+                        {/*    <Table.Cell>danilo@example.com</Table.Cell>*/}
+                        {/*    <Table.Cell>Developer</Table.Cell>*/}
+                        {/*</Table.Row>*/}
 
-                    {/*<Table.Row>*/}
-                    {/*    <Table.RowHeaderCell>Jasper Eriksson</Table.RowHeaderCell>*/}
-                    {/*    <Table.Cell>jasper@example.com</Table.Cell>*/}
-                    {/*    <Table.Cell>Developer</Table.Cell>*/}
-                    {/*</Table.Row>*/}
-                </Table.Body>
-            </Table.Root>
+                        {/*<Table.Row>*/}
+                        {/*    <Table.RowHeaderCell>Zahra Ambessa</Table.RowHeaderCell>*/}
+                        {/*    <Table.Cell>zahra@example.com</Table.Cell>*/}
+                        {/*    <Table.Cell>Admin</Table.Cell>*/}
+                        {/*</Table.Row>*/}
+
+                        {/*<Table.Row>*/}
+                        {/*    <Table.RowHeaderCell>Jasper Eriksson</Table.RowHeaderCell>*/}
+                        {/*    <Table.Cell>jasper@example.com</Table.Cell>*/}
+                        {/*    <Table.Cell>Developer</Table.Cell>*/}
+                        {/*</Table.Row>*/}
+                    </Table.Body>
+                </Table.Root>
+
+            </ScrollArea>
+
 
             {/*<ScrollArea type="always" scrollbars="vertical" style={{ height: '80%' }}>*/}
             {/*    <Box p="2" pr="8" width={'85%'}>*/}
@@ -416,7 +421,7 @@ export const Body = () => {
                     gap={"2"}
                     pb={"4px"}
                     direction={'row'}
-                    height={"70%"}
+                    height={"100%"}
                     width={"100%"}
                     justify={"center"}
                 >
