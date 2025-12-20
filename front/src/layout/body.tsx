@@ -1,10 +1,9 @@
 // @ts-ignore
 import {Box, Flex, ScrollArea, Theme, ThemePanel, Text, Heading, Button, Badge, Grid, Table} from "@radix-ui/themes";
-import {type ReactNode, useEffect, useState} from "react";
+import {type ReactNode, useCallback, useEffect, useRef, useState} from "react";
 import {WsClient} from "../common/ws_/simple-ws-client";
 import {WS_URL} from "../common/defines.ts";
-import type {GiftShowTableRow} from "../common/ws_/base.ts";
-import {asyncSleep} from "../common/base.ts";
+import type {GiftShowTableRow, WsResponse} from "../common/ws_/base.ts";
 
 
 export const LeftArea = ({
@@ -206,53 +205,64 @@ export const ButtonGroupUtil = (props: ButtonGroupUtilProps) => {
 }
 
 
+interface TableAreaProps {
+    areaTitle?: string;
+    subEvent?: string;
+    show?: boolean;
+    wsClient?: WsClient;
+}
 export const TableArea = ({
-                             areaTitle="合计",
-                             subEvent="gift",
-                             show=true,
-                         }) => {
+                              areaTitle="合计",
+                              subEvent="gift",
+                              show=true,
+                              wsClient=undefined,
+                         }: TableAreaProps) => {
 
     if (!show){
         return <></>
     }
 
     const [tableData, setTableData] = useState<Array<GiftShowTableRow>>([]);
+    const callUpdateTable = useCallback(async (data: WsResponse) => {
+        // console.log(data);
+        // console.log('callUpdateTable')
+        if (data){
+            let text: string = data.data
+
+            let tableRows: GiftShowTableRow[] = []
+
+            try {
+                tableRows = JSON.parse(text)
+            } catch (e) {
+                console.error(e)
+            }
+
+            if (tableRows && tableRows.length > 0){
+                setTableData([...tableRows])
+            }
+
+        }
+    }, [])
 
     useEffect(() => {
+        console.log(`TableArea wsClient change ${wsClient}`)
 
         let cancelCall: any = undefined
         const call_ = async () => {
+            // while (!wsClient){
+            //     await asyncSleep(100)
+            // }
+            // await asyncSleep(100)
 
-            while (!WsClient.shared){
-                await asyncSleep(100)
-            }
-
-            cancelCall = await WsClient.shared?.subscribe(subEvent, async (data) => {
-                // console.log(data);
-                if (data){
-                    let text: string = data.data
-
-                    let tableRows: GiftShowTableRow[] = []
-
-                    try {
-                        tableRows = JSON.parse(text)
-                    } catch (e) {
-                        console.error(e)
-                    }
-
-                    if (tableRows && tableRows.length > 0){
-                        setTableData(tableRows)
-                    }
-
-                }
-            })
+            console.log(`TableArea wsClient change ${wsClient} call_`)
+            cancelCall = await wsClient?.subscribe(subEvent, callUpdateTable)
         }
 
         call_().then()
 
         return () => cancelCall?.()
 
-    }, [])
+    }, [wsClient, show])
 
     return <Box width={'100%'} height={'100%'} p={'4'}
         // className={'bg-gray-800'}
@@ -345,12 +355,20 @@ export const TableArea = ({
 
 export const Body = () => {
 
+    const clientWs = useRef<WsClient>(undefined)
+    const [client, setClient] = useState<WsClient>();
+
     useEffect(() => {
+        console.log('Body useEffect');
 
         for (let i = 0; i < 3; i++) {
             try {
                 // WsClient.shared = new WsClient('http://localhost:8091/ws/room');
-                WsClient.shared = new WsClient(WS_URL);
+                if (!clientWs.current){
+                    clientWs.current = new WsClient(WS_URL)
+                }
+                WsClient.shared = clientWs.current
+                setClient(WsClient.shared);
                 break;
             } catch (e) {
                 console.error(e);
@@ -426,7 +444,7 @@ export const Body = () => {
                     justify={"center"}
                 >
                     <LeftArea show={leftShow} />
-                    <TableArea />
+                    <TableArea wsClient={client} />
                     <RightArea show={rightShow}/>
                 </Flex>
             </Flex>
