@@ -261,10 +261,14 @@ export const TableArea = ({
                         <Table.ColumnHeaderCell>轮次</Table.ColumnHeaderCell>
                         <Table.ColumnHeaderCell>直播间号</Table.ColumnHeaderCell>
                         <Table.ColumnHeaderCell>直播间名称</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮环游个数合计</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮环游总个数</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮环游个数</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮环游数合计</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>上轮环游个数</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>上轮环游数合计</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>环游数增加</Table.ColumnHeaderCell>
                         <Table.ColumnHeaderCell>本轮心动鸭个数</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>本轮心动鸭总个数</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮心动鸭合计</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>本轮环游 - 心动鸭</Table.ColumnHeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -278,8 +282,12 @@ export const TableArea = ({
                                 <Table.Cell>{row.room_name}</Table.Cell>
                                 <Table.Cell>{row.word_count}</Table.Cell>
                                 <Table.Cell>{row.word_count_total}</Table.Cell>
+                                <Table.Cell>{row.last_word_count}</Table.Cell>
+                                <Table.Cell>{row.last_word_count_total}</Table.Cell>
+                                <Table.Cell>{row.word_count_sub}</Table.Cell>
                                 <Table.Cell>{row.duck_count}</Table.Cell>
                                 <Table.Cell>{row.duck_count_total}</Table.Cell>
+                                <Table.Cell>{row.world_sub_duck}</Table.Cell>
                             </Table.Row>
                         ))
                     }
@@ -366,30 +374,30 @@ export const Body = () => {
                 justify={"center"}
             >
 
-                <Flex
-                    gap={"2"}
-                    pb={"4px"}
-                    direction={'row'}
-                    height={"30%"}
-                    width={"100%"}
-                    justify={"center"}
-                >
-                   <Box width={'100%'} height={'100%'}>
-                       <Flex
-                            justify={'center'}
-                            width={'100%'}
-                            height={'100%'}
-                            direction={'column'}
-                       >
-                           <ButtonGroupUtil
-                               parentSetLogRun={(run_) => setLeftShow(run_)}
-                               parentSetGiftMsgRun={(run_) => setRightShow(run_)}
-                           />
-                       {/*  监听窗口  */}
-                           <ListenRooms />
-                       </Flex>
-                   </Box>
-                </Flex>
+                {/*<Flex*/}
+                {/*    gap={"2"}*/}
+                {/*    pb={"4px"}*/}
+                {/*    direction={'row'}*/}
+                {/*    height={"30%"}*/}
+                {/*    width={"100%"}*/}
+                {/*    justify={"center"}*/}
+                {/*>*/}
+                {/*   <Box width={'100%'} height={'100%'}>*/}
+                {/*       <Flex*/}
+                {/*            justify={'center'}*/}
+                {/*            width={'100%'}*/}
+                {/*            height={'100%'}*/}
+                {/*            direction={'column'}*/}
+                {/*       >*/}
+                {/*           <ButtonGroupUtil*/}
+                {/*               parentSetLogRun={(run_) => setLeftShow(run_)}*/}
+                {/*               parentSetGiftMsgRun={(run_) => setRightShow(run_)}*/}
+                {/*           />*/}
+                {/*       /!*  监听窗口  *!/*/}
+                {/*           <ListenRooms />*/}
+                {/*       </Flex>*/}
+                {/*   </Box>*/}
+                {/*</Flex>*/}
 
                 <Flex
                     gap={"2"}
