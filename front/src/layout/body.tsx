@@ -278,7 +278,7 @@ export const TableArea = ({
                 {areaTitle}
             </Heading>
 
-            <ScrollArea type="always" scrollbars="vertical" style={{ height: '100%' }}>
+            <ScrollArea type="always" scrollbars="both" style={{ height: '100%' }}>
 
                 <Table.Root variant="surface">
                     <Table.Header>
